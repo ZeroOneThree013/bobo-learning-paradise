@@ -1028,9 +1028,17 @@ document.addEventListener('click', e => {
   if (act === 'close') { closeModal(); return; }
   if (act === 'copy') { const t = el.parentElement.querySelector('code').textContent; copyText(t).then(ok => { el.textContent = ok ? '已複製 ✔' : '請手動複製'; setTimeout(() => { el.textContent = '複製'; }, 1500); }); return; }
   if (act === 'reset') {
-    showModal('<h2>要重設所有進度嗎？</h2><p>星星、徽章與完成紀錄都會被清除，無法復原。</p><div class="row" style="justify-content:center"><button class="btn sec" type="button" data-act="close">先不要</button><button class="btn" type="button" data-act="reset-ok">確定重設</button></div>'); return;
+    showModal('<h2>要重設所有進度嗎？</h2><p>星星、徽章與完成紀錄都會被清除，無法復原。' + (typeof Acct !== 'undefined' && Acct.s ? '你已登入，<strong>雲端備份的進度也會一起清除</strong>。' : '') + '</p><div class="row" style="justify-content:center"><button class="btn sec" type="button" data-act="close">先不要</button><button class="btn" type="button" data-act="reset-ok">確定重設</button></div>'); return;
   }
-  if (act === 'reset-ok') { S = { v: 1, u: {} }; save(); Q = null; closeModal(); toast('進度已重設'); render(true); return; }
+  if (act === 'reset-ok') {
+    (async () => {
+      el.disabled = true;
+      const ok = typeof resetAll === 'function' ? await resetAll() : (S = { v: 1, u: {} }, save(), true);
+      closeModal();
+      if (ok) { Q = null; toast('進度已重設'); renderTop(); render(true); }
+    })();
+    return;
+  }
   if (act === 'card' && u) { LI[u.id] = +el.dataset.i; renderKeep(); return; }
   if (act === 'learned' && u) { U(u.id).learn = true; save(); toast('📖 學習完成！換驗證囉'); Mascot.say('很好！來看看你學會了多少。', 'cheer'); checkBadge(u); location.hash = '#/u/' + u.id + '/quiz'; return; }
   if (!u) return;
@@ -1254,6 +1262,26 @@ document.addEventListener('click', async e => {
   else if (act === 'imp') { const f = $('#impfile'); if (f) f.click(); }
 });
 document.addEventListener('change', e => { if (e.target && e.target.id === 'impfile' && e.target.files[0]) { importFile(e.target.files[0]); e.target.value = ''; } });
+
+/* ---- 重設：已登入時，雲端的進度也要一起清掉，否則下次同步會被「取最高分」補回來 ---- */
+async function resetAll() {
+  clearTimeout(Acct.timer);
+  if (Acct.s && Acct.enabled()) {
+    while (Acct.busy) await new Promise(r => setTimeout(r, 100));
+    try {
+      const r = await Acct.call({ action: 'reset', session: Acct.s.session });
+      if (!r.ok) {
+        if (r.error === 'session') { Acct.expired(); toast('登入已過期，請重新登入後再重設，才能一併清除雲端進度'); }
+        else toast('雲端重設失敗，請稍後再試');
+        return false;
+      }
+    } catch (e) { toast('連不上雲端，重設沒有完成，請稍後再試'); return false; }
+    Acct.status = 'ok'; Acct.last = Date.now();
+  }
+  S = { v: 1, u: {} };
+  try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch (e) { }
+  return true;
+}
 
 </script>
 </body>

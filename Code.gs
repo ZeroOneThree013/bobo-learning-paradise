@@ -2,7 +2,9 @@
  * BoBo 學習樂園：選配後端（Google Apps Script，綁定在一份 Google Sheet 上）
  * 功能：① 雲端題庫 ② 題目回饋 ③ Google 登入後同步學習進度 ④ 把成績單寄到「自己」的 Gmail
  *
- * 設定：專案設定 → 指令碼屬性，新增 CLIENT_ID = 你的 OAuth 用戶端 ID（xxxx.apps.googleusercontent.com）
+ * 設定：專案設定 → 指令碼屬性，新增
+ *   CLIENT_ID = 你的 OAuth 用戶端 ID（xxxx.apps.googleusercontent.com）
+ *   SHEET_ID  = 試算表網址中 /d/ 與 /edit 之間的那串（Apps Script 若是從試算表裡開的，可不設）
  * 部署：部署 → 新增部署作業 → 網頁應用程式（執行身分：我；誰可以存取：任何人）
  * 分頁：questions 要自己匯入；feedback / users / progress / sessions 會自動建立。
  */
@@ -12,7 +14,7 @@ var MAX_JSON = 60000;
 
 /* ---------- 入口 ---------- */
 function doGet(e) {
-  var sh = SpreadsheetApp.getActive().getSheetByName('questions');
+  var sh = ss_().getSheetByName('questions');
   var out = [];
   if (sh) {
     var rows = sh.getDataRange().getValues(), head = rows.shift();
@@ -34,6 +36,7 @@ function doPost(e) {
       case 'load': res = load_(p); break;
       case 'save': res = save_(p); break;
       case 'mail': res = mail_(p); break;
+      case 'reset': res = reset_(p); break;
       case 'logout': res = logout_(p); break;
       default: res = feedback_(p);
     }
@@ -41,10 +44,15 @@ function doPost(e) {
   return json_(res);
 }
 
+// 試算表：有設定 SHEET_ID 就用它開啟（獨立的 Apps Script 專案用）；沒設定就用綁定的試算表
+function ss_() {
+  var id = PropertiesService.getScriptProperties().getProperty('SHEET_ID');
+  return id ? SpreadsheetApp.openById(id) : SpreadsheetApp.getActive();
+}
 function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
 function clip_(s, n) { return String(s == null ? '' : s).slice(0, n); }
 function sheet_(name, head) {
-  var ss = SpreadsheetApp.getActive(), sh = ss.getSheetByName(name);
+  var ss = ss_(), sh = ss.getSheetByName(name);
   if (!sh) { sh = ss.insertSheet(name); sh.appendRow(head); }
   return sh;
 }
@@ -169,6 +177,19 @@ function save_(p) {
     if (r.row < 0) sh.appendRow([email, JSON.stringify(merged), now]);
     else sh.getRange(r.row, 2, 1, 2).setValues([[JSON.stringify(merged), now]]);
     return { ok: true, progress: merged, updatedAt: now };
+  });
+}
+
+// 重設：把這個帳號雲端的進度清成空白（否則下次同步會被「取最高分」補回來）
+function reset_(p) {
+  var email = authed_(p);
+  if (!email) return { ok: false, error: 'session' };
+  return withLock_(function () {
+    var sh = sheet_('progress', ['email', 'json', 'updatedAt']), r = readProgress_(email), now = Date.now();
+    var empty = JSON.stringify({ v: 1, u: {} });
+    if (r.row < 0) sh.appendRow([email, empty, now]);
+    else sh.getRange(r.row, 2, 1, 2).setValues([[empty, now]]);
+    return { ok: true, updatedAt: now };
   });
 }
 
