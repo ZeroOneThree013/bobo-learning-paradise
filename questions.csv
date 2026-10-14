@@ -1,0 +1,51 @@
+﻿unit,type,q,body,answer,hints,explain
+u1,choice,LaTeX 的指令都以哪個符號開頭？,反斜線 \ ||百分比 %||貨幣符號 $||星號 *,1,,LaTeX 指令一律從反斜線開始，例如 \documentclass、\section。
+u1,choice,寫一般書面報告時，\documentclass 後面的大括號通常放什麼？,article||document||11pt||center,1,,大括號放文件類型，報告常用 article。11pt 是放在方括號的輔助設定。
+u1,tf,\begin{document} 與 \end{document} 中間，才是文件的正文內容。,,對,,沒錯，這一對標籤框住整份文件的內容；套件與設定通常寫在 \begin{document} 之前。
+u1,fill,補上文件類型，讓它成為一般報告：,\documentclass[11pt]{___},article,一般書面報告用的類型，英文意思是「文章」||a 開頭，共 7 個字母,article 是最常用的報告類型。其他類型還有書籍、簡報等，版面與章節設計都不一樣。
+u1,fill,補完結尾標籤：,\end{___},document,要和 \begin{document} 成對||英文意思是「文件」,\begin{document} 和 \end{document} 要成對出現。
+u2,choice,在預設的 LaTeX 文件直接輸入中文，編譯會出錯，最主要的原因是？,預設只有基本功能，需要加裝支援中文的套件||電腦沒有安裝中文輸入法||文件類型一定要改成 book||沒有按 Ctrl + Enter,1,,LaTeX 剛開始只具備基本功能，要顯示中文得用 \usepackage 加裝 xeCJK 之類的套件。
+u2,choice,要讓 xeCJK 正常運作，編譯器應該設成哪一個？,pdfLaTeX||XeLaTeX||BibTeX||TeXMaker,2,,xeCJK 只能搭配 XeLaTeX。官方也說 LuaLaTeX 同樣適合中文，但那是另一條路。
+u2,tf,xeCJK 套件可以搭配 pdfLaTeX 編譯器使用。,,錯,,不行。官方指出 xeCJK 只能在 XeLaTeX 下運作，所以要把編譯器切換成 XeLaTeX。
+u2,fill,載入支援中文的套件：,\usepackage{___},xeCJK,套件名稱以 xe 開頭||xe 後面接 CJK（中日韓）,注意大小寫：xeCJK 的 CJK 要大寫。
+u2,fill,指定中文主要字型的指令：,\___{FandolSong},setCJKmainfont,指令名稱由 set、CJK、main、font 組成||set + CJK + main + font，中間沒有空格,\setCJKmainfont{字型名稱} 用來設定中文的主要字型。
+u3,choice,下列哪個套件用來設定邊界與紙張尺寸？,geometry||setspace||graphicx||apacite,1,,geometry 負責邊界與紙張；setspace 管行距；graphicx 管圖片；apacite 管參考文獻格式。
+u3,choice,想把行距設成 1.5 倍，應該使用哪個指令（需先載入 setspace）？,\onehalfspacing||\doublespacing||\vfill||\centering,1,,\onehalfspacing 是 1.5 倍行高，\doublespacing 是兩倍。
+u3,tf,在某一行語法前面加上 %，這一行會被暫時停用。,,對,,對，% 後面都視為註解，除錯時很好用。
+u3,fill,載入調整行距的套件：,\usepackage{___},setspace,set 開頭，和「space（空間）」有關||set + space,setspace 提供 \doublespacing、\onehalfspacing 等指令。
+u3,fill,補完第二層標題的指令：,\___{什麼是 LaTeX},subsection,比 section 多了一個前綴 sub||sub + section,\subsection 是 \section 底下的子標題，編號會自動接在章節編號後面。
+u4,choice,頁面最上方想留白，但 \vspace 上面沒有任何段落，應該怎麼寫？,\vspace*{2cm}||\vspace{2cm}||\vfill{2cm}||\hspace*{2cm},1,,上方沒有段落時，\vspace 要加星號寫成 \vspace*，留白才不會被忽略。
+u4,choice,哪個指令能把後面的內容推到頁面底部？,\vfill||\centering||\textbf||\small,1,,\vfill 會把空白填滿，讓它後面的內容貼到頁面底部。
+u4,tf,\textbf{標題} 的作用是把文字變成粗體。,,對,,對，\textbf 就是粗體。
+u4,fill,讓內容水平置中的環境：,\begin{___},center,英文意思是「中心」||c 開頭，共 6 個字母,center 環境會讓包住的內容水平置中。
+u4,fill,要插入圖片，先載入哪個套件？,\usepackage{___},graphicx,名稱和 graphics（圖形）有關，結尾有個 x||graphic + x,graphicx 提供 \includegraphics，用來插入圖片。
+u5,choice,想把圓點清單改成數字編號清單，環境名稱要改成什麼？,enumerate||itemize||footnote||center,1,,itemize 是圓點、enumerate 是編號。
+u5,choice,\footnote{…} 裡的內容，編譯後會出現在哪裡？,該頁的底部||文件的最後一頁||標題旁邊||目錄裡,1,,註腳文字會放在該頁底部，並自動加上編號。
+u5,tf,想用字母或羅馬數字編號，需要先載入 enumerate 套件。,,對,,影片的做法是這樣：先載入同名套件，再用方括號指定編號樣式。
+u5,fill,清單裡每個項目前面要寫的指令：,\___ 第一項,item,很短，英文意思是「項目」||只有 4 個字母,每個 \item 就是清單的一個項目。
+u5,fill,補上條列清單（圓點）的環境名稱：,\begin{___} \item 第一項 \end{itemize},itemize,item + ize||結尾的 \end 已經給你答案了,itemize 是圓點清單；題目結尾的 \end{itemize} 就是提示。
+u6,choice,圖編譯後的位置和原始碼不一致，最常見的處理方式是？,在 figure 旁加位置參數，例如 [h]||把圖片刪掉重新上傳||改用 Word 排版||把 caption 刪掉,1,,figure 是浮動體，加上 [h] 可以要求它放在原始碼附近。
+u6,choice,哪個位置參數代表「放在頁面頂端」？,t||b||h||p,1,,t = top（頂端）、b = bottom（底端）、h = here（這裡）、p = 浮動體專用頁。
+u6,tf,\pageref{名字} 會把該圖表所在的頁碼插入文中。,,對,,對。\ref 插入編號，\pageref 插入頁碼。
+u6,fill,在文中參照圖表的編號：如圖,\___{fig:plot} 所示,ref,三個字母，是 reference（參照）的縮寫||r 開頭,\ref{名字} 會自動換成圖表的編號。
+u6,fill,圖表下方的說明文字指令：,\___{成績分布},caption,英文意思是「標題、說明文字」||c 開頭，共 7 個字母,\caption{…} 會在圖或表旁邊加上說明，並自動編號。
+u7,choice,表格欄位設定 {|c|c|c|} 代表什麼？,三欄、每欄置中，欄與欄之間有垂直線||三列、每列置中||三個獨立的表格||三種不同的顏色,1,,一個字母是一欄，c 是置中，| 是垂直線。
+u7,choice,同一列裡，不同格的資料要用哪個符號隔開？,&||\\||%||$,1,,格與格之間用 &；一列結束要換行時才用 \\。
+u7,tf,\hline 的作用是畫水平格線。,,對,,對，\hline 畫一條橫線；直線則靠欄位設定裡的 |。
+u7,fill,欄位設定中，要讓文字靠左對齊的字母：,\begin{tabular}{|c|___|c|},l,是 left（左）的第一個字母||小寫的 L,l = left 靠左、c = center 置中、r = right 靠右。
+u7,fill,一列結束、要換行時，在列尾寫：,小明 & 數學 & 90 ___,\\,和文字換行用的是同一個符號||兩個反斜線,列尾用兩個反斜線 \\ 換行。
+u8,choice,想讓公式獨立成一個段落，應該用哪種寫法？,\[ 公式 \]||$ 公式 $||% 公式 %||\begin{tabular},1,,獨立公式用 \[ 和 \] 包住；前後各一個 $ 的是行內公式。
+u8,choice,在 \frac{a}{b} 中，a 是什麼？,分子||分母||指數||下標,1,,\frac 先寫分子、後寫分母，所以 a 是分子，b 是分母。
+u8,tf,行內公式是在公式的兩側各加一個 $ 符號。,,對,,對，這樣公式就會嵌在文字行裡。
+u8,fill,根號的指令：,\___{x},sqrt,square root 的縮寫||s 開頭，共 4 個字母,\sqrt 取自 square root（平方根）。
+u8,fill,Sigma 求和的指令：,\____{i=1}^{n} i,sum,英文意思是「總和」||只有 3 個字母,\sum 是求和符號，下標放起始值、上標放結束值。
+u9,choice,存放參考文獻資料的檔案，副檔名是什麼？,.bib||.tex||.pdf||.png,1,,文獻資料庫放在 .bib 檔；.tex 是文件本身。
+u9,choice,文章中要引用文獻，使用哪個指令？,\cite{鍵值}||\ref{鍵值}||\footnote{鍵值}||\label{鍵值},1,,\cite 引用文獻；\ref 是參照圖表、章節編號。
+u9,tf,匯入書目時，\bibliography{refs} 的檔名要寫成 refs.bib。,,錯,,不用加副檔名，寫 \bibliography{refs} 就會讀 refs.bib。
+u9,fill,文中引用文獻：,\___{smith2021},cite,英文意思是「引用」||c 開頭，共 4 個字母,\cite{鍵值} 會在文中放入引用，並把文獻收進參考文獻清單。
+u9,fill,匯入書目檔 refs.bib：,\___{refs},bibliography,名字就是「書目」的英文，很長||biblio + graphy,\bibliography{檔名} 用來匯入書目檔，檔名不含 .bib。
+u10,choice,產生目錄的指令是哪一個？,\tableofcontents||\listoffigures||\maketitle||\newpage,1,,\tableofcontents 產生目錄；\listoffigures 則是圖目錄。
+u10,choice,「摘要」章節不想列入目錄，標題要怎麼寫？,\section*{摘要}||\section{摘要}||\subsection{摘要}||\newpage{摘要},1,,加星號的 \section* 不編號，也不會進目錄。
+u10,tf,\pagenumbering{arabic} 會改成阿拉伯數字，並讓頁碼從第 1 頁重新計算。,,對,,對。這正是正文開始時常用的做法。
+u10,fill,把摘要與目錄的頁碼改成羅馬數字：,\pagenumbering{___},roman,英文意思是「羅馬的」||r 開頭，共 5 個字母,roman 是小寫羅馬數字 i、ii、iii。
+u10,fill,在摘要、目錄前插入分頁：,\___,newpage||clearpage,英文意思是「新的一頁」||new + page,\newpage 會開新的一頁（\clearpage 也可以，兩者在有浮動體時略有不同）。
