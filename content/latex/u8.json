@@ -1,0 +1,110 @@
+{
+  "id": "u8",
+  "n": 8,
+  "icon": "➗",
+  "title": "數學公式",
+  "sub": "根號、分數、求和",
+  "official": [
+    {
+      "label": "Mathematical expressions",
+      "url": "https://www.overleaf.com/learn/latex/Mathematical_expressions"
+    },
+    {
+      "label": "Fractions and Binomials",
+      "url": "https://www.overleaf.com/learn/latex/Fractions_and_Binomials"
+    },
+    {
+      "label": "Integrals, sums and limits",
+      "url": "https://www.overleaf.com/learn/latex/Integrals,_sums_and_limits"
+    }
+  ],
+  "cards": [
+    {
+      "t": "兩種寫法",
+      "body": "許多研究者選擇 LaTeX，是因為它能快速做出整齊美觀的數學公式。公式有兩種寫法：\n\n寫在段落裡（行內公式）：公式前後各加一個 `$`。\n自成一段（獨立公式）：用 `\\[` 和 `\\]` 把公式包起來。",
+      "code": "行內公式：$a^2 + b^2 = c^2$\n\n獨立公式：\n\\[ a^2 + b^2 = c^2 \\]",
+      "url": "https://www.overleaf.com/learn/latex/Mathematical_expressions",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "根號與分數",
+      "body": "`\\sqrt{…}` 是根號，大括號裡放被開方的數。`\\frac{分子}{分母}` 是分數：先寫分子、再寫分母，各用一組大括號。",
+      "code": "\\sqrt{x + 1}\n\\frac{a}{b}",
+      "url": "https://www.overleaf.com/learn/latex/Fractions_and_Binomials",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "求和符號",
+      "body": "`\\sum` 是 Sigma 求和符號。下標（起始值）用底線 `_`，上標（結束值）用 `^`；內容超過一個字元時，要用大括號包起來。",
+      "code": "\\sum_{i=1}^{n} i",
+      "url": "https://www.overleaf.com/learn/latex/Integrals,_sums_and_limits",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "在 BoBo 試試看",
+      "body": "下一頁的實作有一個公式編輯器：輸入語法，右邊就會即時畫出公式。語法寫錯時，會用簡單的話告訴你哪裡有問題。"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "想讓公式獨立成一個段落，應該用哪種寫法？",
+      "options": [
+        "\\[ 公式 \\]",
+        "$ 公式 $",
+        "% 公式 %",
+        "\\begin{tabular}"
+      ],
+      "answer": 0,
+      "explain": "獨立公式用 \\[ 和 \\] 包住；前後各一個 $ 的是行內公式。"
+    },
+    {
+      "type": "choice",
+      "q": "在 \\frac{a}{b} 中，a 是什麼？",
+      "options": [
+        "分子",
+        "分母",
+        "指數",
+        "下標"
+      ],
+      "answer": 0,
+      "explain": "\\frac 先寫分子、後寫分母，所以 a 是分子，b 是分母。"
+    },
+    {
+      "type": "tf",
+      "q": "行內公式是在公式的兩側各加一個 $ 符號。",
+      "answer": true,
+      "explain": "對，這樣公式就會嵌在文字行裡。"
+    },
+    {
+      "type": "fill",
+      "q": "根號的指令：",
+      "code": "\\___{x}",
+      "answers": [
+        "sqrt"
+      ],
+      "hints": [
+        "square root 的縮寫",
+        "s 開頭，共 4 個字母"
+      ],
+      "explain": "\\sqrt 取自 square root（平方根）。"
+    },
+    {
+      "type": "fill",
+      "q": "Sigma 求和的指令：",
+      "code": "\\____{i=1}^{n} i",
+      "answers": [
+        "sum"
+      ],
+      "hints": [
+        "英文意思是「總和」",
+        "只有 3 個字母"
+      ],
+      "explain": "\\sum 是求和符號，下標放起始值、上標放結束值。"
+    }
+  ],
+  "lab": {
+    "type": "math",
+    "task": "寫出一個同時有分數與根號的公式（例如二次公式），並看它即時顯示出來。"
+  }
+}

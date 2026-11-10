@@ -1,0 +1,99 @@
+{
+  "id": "u2",
+  "n": 2,
+  "icon": "🈶",
+  "title": "中文支援",
+  "sub": "xeCJK 與 XeLaTeX",
+  "official": [
+    {
+      "label": "Chinese（官方）",
+      "url": "https://www.overleaf.com/learn/latex/Chinese"
+    }
+  ],
+  "cards": [
+    {
+      "t": "為什麼中文會報錯？",
+      "body": "剛開始的 LaTeX 只有最基本的功能，就像剛買的手機，想做更多事就得再裝 App。所以直接在文件裡輸入中文，編譯會失敗。"
+    },
+    {
+      "t": "用 \\usepackage 加裝功能",
+      "body": "`\\usepackage{套件名}` 用來擴充 LaTeX 的功能。要顯示中文，先載入 `xeCJK`，再用 `\\setCJKmainfont` 指定中文字型。\n\n可用的字型名稱可以到官方的字型清單挑選，複製進大括號即可。",
+      "code": "\\usepackage{xeCJK}\n\\setCJKmainfont{FandolSong}",
+      "url": "https://www.overleaf.com/learn/latex/Chinese",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "把編譯器改成 XeLaTeX",
+      "body": "套件裝好還不夠：到 Overleaf 左上角打開功能選單，把「編譯器」改成 **XeLaTeX**，重新編譯後，中文才會正常顯示。"
+    },
+    {
+      "t": "官方補充：官方怎麼建議",
+      "body": "官方文件建議中文文件用 **XeLaTeX 或 LuaLaTeX** 編譯，因為它們直接支援 UTF-8 文字，也能搭配 TrueType／OpenType 字型。\n\n`xeCJK` 只能搭配 XeLaTeX。想要完整的中文在地化，也可以改用 `ctex` 系列的文件類別（例如 `ctexart`）。",
+      "url": "https://www.overleaf.com/learn/latex/Chinese",
+      "label": "官方：Chinese",
+      "sup": true
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "在預設的 LaTeX 文件直接輸入中文，編譯會出錯，最主要的原因是？",
+      "options": [
+        "預設只有基本功能，需要加裝支援中文的套件",
+        "電腦沒有安裝中文輸入法",
+        "文件類型一定要改成 book",
+        "沒有按 Ctrl + Enter"
+      ],
+      "answer": 0,
+      "explain": "LaTeX 剛開始只具備基本功能，要顯示中文得用 \\usepackage 加裝 xeCJK 之類的套件。"
+    },
+    {
+      "type": "choice",
+      "q": "要讓 xeCJK 正常運作，編譯器應該設成哪一個？",
+      "options": [
+        "pdfLaTeX",
+        "XeLaTeX",
+        "BibTeX",
+        "TeXMaker"
+      ],
+      "answer": 1,
+      "explain": "xeCJK 只能搭配 XeLaTeX。官方也說 LuaLaTeX 同樣適合中文，但那是另一條路。"
+    },
+    {
+      "type": "tf",
+      "q": "xeCJK 套件可以搭配 pdfLaTeX 編譯器使用。",
+      "answer": false,
+      "explain": "不行。官方指出 xeCJK 只能在 XeLaTeX 下運作，所以要把編譯器切換成 XeLaTeX。"
+    },
+    {
+      "type": "fill",
+      "q": "載入支援中文的套件：",
+      "code": "\\usepackage{___}",
+      "answers": [
+        "xeCJK"
+      ],
+      "hints": [
+        "套件名稱以 xe 開頭",
+        "xe 後面接 CJK（中日韓）"
+      ],
+      "explain": "注意大小寫：xeCJK 的 CJK 要大寫。"
+    },
+    {
+      "type": "fill",
+      "q": "指定中文主要字型的指令：",
+      "code": "\\___{FandolSong}",
+      "answers": [
+        "setCJKmainfont"
+      ],
+      "hints": [
+        "指令名稱由 set、CJK、main、font 組成",
+        "set + CJK + main + font，中間沒有空格"
+      ],
+      "explain": "\\setCJKmainfont{字型名稱} 用來設定中文的主要字型。"
+    }
+  ],
+  "lab": {
+    "type": "compile",
+    "task": "補完中文設定、選對編譯器，按「編譯」讓中文成功顯示。"
+  }
+}

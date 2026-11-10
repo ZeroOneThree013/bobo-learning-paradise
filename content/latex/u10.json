@@ -1,0 +1,109 @@
+{
+  "id": "u10",
+  "n": 10,
+  "icon": "🔖",
+  "title": "目錄與頁碼",
+  "sub": "目錄、羅馬數字、重設頁碼",
+  "official": [
+    {
+      "label": "Table of contents",
+      "url": "https://www.overleaf.com/learn/latex/Table_of_contents"
+    },
+    {
+      "label": "Page numbering",
+      "url": "https://www.overleaf.com/learn/latex/Page_numbering"
+    }
+  ],
+  "cards": [
+    {
+      "t": "自動產生目錄",
+      "body": "`\\tableofcontents` 會擷取所有章節與子章節的標題，自動生成目錄。章節或頁碼變動時，重新編譯就會更新。",
+      "code": "\\tableofcontents",
+      "url": "https://www.overleaf.com/learn/latex/Table_of_contents",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "不想進目錄：加星號",
+      "body": "在 `\\section` 後面加一個星號，標題就不會編號，也不會列入目錄。像「摘要」這種頁面就很適合。\n\n參考文獻的標題也可以用額外設定從目錄排除。",
+      "code": "\\section*{摘要}"
+    },
+    {
+      "t": "分頁與改目錄標題",
+      "body": "摘要、目錄通常各自一頁，所以在它們前面各插入一個 `\\newpage`（分頁）。\n\n目錄的預設標題是英文的 Contents，可以用 `\\renewcommand*\\contentsname{…}` 改成中文。",
+      "code": "\\newpage\n\\renewcommand*\\contentsname{目錄}\n\\tableofcontents",
+      "url": "https://www.overleaf.com/learn/latex/Table_of_contents",
+      "label": "官方：改目錄標題的範例",
+      "sup": true
+    },
+    {
+      "t": "羅馬數字與重設頁碼",
+      "body": "摘要和目錄的頁碼，通常用羅馬數字。用 `\\pagenumbering{roman}` 設定格式；等到正文開始，再改回 `arabic`，頁碼就會從第 1 頁重新計算。",
+      "code": "\\pagenumbering{roman}\n... 摘要、目錄 ...\n\\newpage\n\\pagenumbering{arabic}\n... 正文 ...",
+      "url": "https://www.overleaf.com/learn/latex/Page_numbering",
+      "label": "官方怎麼說"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "產生目錄的指令是哪一個？",
+      "options": [
+        "\\tableofcontents",
+        "\\listoffigures",
+        "\\maketitle",
+        "\\newpage"
+      ],
+      "answer": 0,
+      "explain": "\\tableofcontents 產生目錄；\\listoffigures 則是圖目錄。"
+    },
+    {
+      "type": "choice",
+      "q": "「摘要」章節不想列入目錄，標題要怎麼寫？",
+      "options": [
+        "\\section*{摘要}",
+        "\\section{摘要}",
+        "\\subsection{摘要}",
+        "\\newpage{摘要}"
+      ],
+      "answer": 0,
+      "explain": "加星號的 \\section* 不編號，也不會進目錄。"
+    },
+    {
+      "type": "tf",
+      "q": "\\pagenumbering{arabic} 會改成阿拉伯數字，並讓頁碼從第 1 頁重新計算。",
+      "answer": true,
+      "explain": "對。這正是正文開始時常用的做法。"
+    },
+    {
+      "type": "fill",
+      "q": "把摘要與目錄的頁碼改成羅馬數字：",
+      "code": "\\pagenumbering{___}",
+      "answers": [
+        "roman"
+      ],
+      "hints": [
+        "英文意思是「羅馬的」",
+        "r 開頭，共 5 個字母"
+      ],
+      "explain": "roman 是小寫羅馬數字 i、ii、iii。"
+    },
+    {
+      "type": "fill",
+      "q": "在摘要、目錄前插入分頁：",
+      "code": "\\___",
+      "answers": [
+        "newpage",
+        "clearpage"
+      ],
+      "hints": [
+        "英文意思是「新的一頁」",
+        "new + page"
+      ],
+      "explain": "\\newpage 會開新的一頁（\\clearpage 也可以，兩者在有浮動體時略有不同）。"
+    }
+  ],
+  "lab": {
+    "type": "pageno",
+    "task": "讓摘要不進目錄、前面頁碼用羅馬數字、正文從 1 重新開始，並且摘要、目錄、正文各自分頁。"
+  }
+}

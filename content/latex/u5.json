@@ -1,0 +1,109 @@
+{
+  "id": "u5",
+  "n": 5,
+  "icon": "📝",
+  "title": "註腳與清單",
+  "sub": "footnote、itemize、enumerate",
+  "official": [
+    {
+      "label": "Footnotes",
+      "url": "https://www.overleaf.com/learn/latex/Footnotes"
+    },
+    {
+      "label": "Lists",
+      "url": "https://www.overleaf.com/learn/latex/Lists"
+    }
+  ],
+  "cards": [
+    {
+      "t": "註腳 \\footnote",
+      "body": "在句子裡輸入 `\\footnote{…}`，LaTeX 會把註腳文字放在該頁底部，並在標註的位置自動加上編號。\n\n另一種寫法：用 `\\footnotemark` 標記位置，再用 `\\footnotetext{…}` 把內容寫在別的地方，效果相同。",
+      "code": "這是一句話\\footnote{這是註腳的內容。}",
+      "url": "https://www.overleaf.com/learn/latex/Footnotes",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "條列清單：itemize",
+      "body": "用 `itemize` 環境建立條列清單，每個 `\\item` 是一個項目。編譯後，每個項目前面會有一個黑色圓點。",
+      "code": "\\begin{itemize}\n  \\item 第一項\n  \\item 第二項\n\\end{itemize}",
+      "url": "https://www.overleaf.com/learn/latex/Lists",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "編號清單：enumerate",
+      "body": "把環境名稱 `itemize` 改成 `enumerate`，圓點就會變成阿拉伯數字的編號。",
+      "code": "\\begin{enumerate}\n  \\item 第一項\n  \\item 第二項\n\\end{enumerate}",
+      "url": "https://www.overleaf.com/learn/latex/Lists",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "換成字母或羅馬數字",
+      "body": "想用英文字母或羅馬數字編號，先在文件開頭載入同名的 `enumerate` 套件，再在 `\\begin{enumerate}` 後面用方括號指定樣式，例如 `[(a)]`、`[A.]`、`[I)]`。\n\n編號的兩側，也可以加上括號等裝飾符號。",
+      "code": "\\usepackage{enumerate}\n...\n\\begin{enumerate}[(a)]\n  \\item 第一項\n\\end{enumerate}",
+      "url": "https://www.overleaf.com/learn/latex/Lists",
+      "label": "官方怎麼說"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "想把圓點清單改成數字編號清單，環境名稱要改成什麼？",
+      "options": [
+        "enumerate",
+        "itemize",
+        "footnote",
+        "center"
+      ],
+      "answer": 0,
+      "explain": "itemize 是圓點、enumerate 是編號。"
+    },
+    {
+      "type": "choice",
+      "q": "\\footnote{…} 裡的內容，編譯後會出現在哪裡？",
+      "options": [
+        "該頁的底部",
+        "文件的最後一頁",
+        "標題旁邊",
+        "目錄裡"
+      ],
+      "answer": 0,
+      "explain": "註腳文字會放在該頁底部，並自動加上編號。"
+    },
+    {
+      "type": "tf",
+      "q": "想用字母或羅馬數字編號，需要先載入 enumerate 套件。",
+      "answer": true,
+      "explain": "影片的做法是這樣：先載入同名套件，再用方括號指定編號樣式。"
+    },
+    {
+      "type": "fill",
+      "q": "清單裡每個項目前面要寫的指令：",
+      "code": "\\___ 第一項",
+      "answers": [
+        "item"
+      ],
+      "hints": [
+        "很短，英文意思是「項目」",
+        "只有 4 個字母"
+      ],
+      "explain": "每個 \\item 就是清單的一個項目。"
+    },
+    {
+      "type": "fill",
+      "q": "補上條列清單（圓點）的環境名稱：",
+      "code": "\\begin{___} \\item 第一項 \\end{itemize}",
+      "answers": [
+        "itemize"
+      ],
+      "hints": [
+        "item + ize",
+        "結尾的 \\end 已經給你答案了"
+      ],
+      "explain": "itemize 是圓點清單；題目結尾的 \\end{itemize} 就是提示。"
+    }
+  ],
+  "lab": {
+    "type": "lists",
+    "task": "做出一個「(a)、(b)、(c)」樣式的編號清單，並加上一個註腳。"
+  }
+}

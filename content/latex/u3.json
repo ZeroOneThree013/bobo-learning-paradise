@@ -1,0 +1,111 @@
+{
+  "id": "u3",
+  "n": 3,
+  "icon": "📐",
+  "title": "章節與版面",
+  "sub": "章節、邊界、行距、註解",
+  "official": [
+    {
+      "label": "Sections and chapters",
+      "url": "https://www.overleaf.com/learn/latex/Sections_and_chapters"
+    },
+    {
+      "label": "Page size and margins",
+      "url": "https://www.overleaf.com/learn/latex/Page_size_and_margins"
+    },
+    {
+      "label": "Paragraph formatting",
+      "url": "https://www.overleaf.com/learn/latex/Paragraph_formatting"
+    }
+  ],
+  "cards": [
+    {
+      "t": "章節與編號",
+      "body": "`\\section` 標出章節標題，`\\subsection` 標出第二層的子標題。LaTeX 會自動幫標題編號，順序也一併處理，不用自己維護。",
+      "code": "\\section{簡介}\n\\subsection{什麼是 LaTeX}",
+      "url": "https://www.overleaf.com/learn/latex/Sections_and_chapters",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "邊界與紙張：geometry",
+      "body": "預設邊界對一般報告來說偏大。載入 `geometry` 套件，就能指定邊界寬度（例如 2 公分），也能分別設定上下左右，甚至自訂紙張尺寸（例如 A4）。",
+      "code": "\\usepackage[a4paper, margin=2cm]{geometry}",
+      "url": "https://www.overleaf.com/learn/latex/Page_size_and_margins",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "行距與段距：setspace",
+      "body": "報告的行距通常會加大，方便老師批註。載入 `setspace` 之後：`\\doublespacing` 是兩倍行高，`\\onehalfspacing` 是 1.5 倍。\n\n想讓段落之間的距離也寬一點，可以用 `\\setlength` 設定 `\\parskip`。",
+      "code": "\\usepackage{setspace}\n\\onehalfspacing\n\\setlength{\\parskip}{6pt}",
+      "url": "https://www.overleaf.com/learn/latex/Paragraph_formatting",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "用 % 寫註解",
+      "body": "在語法旁輸入 `%`，後面的內容就是註解，不會出現在 PDF 裡。可以拿來說明這段語法在做什麼；\n\n也能用來除錯：在某一行前面加上 `%`，這一行就暫時失效，方便比較前後的差異。",
+      "code": "% 這是註解，不會輸出\n%\\onehalfspacing   <- 暫時停用這一行"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "下列哪個套件用來設定邊界與紙張尺寸？",
+      "options": [
+        "geometry",
+        "setspace",
+        "graphicx",
+        "apacite"
+      ],
+      "answer": 0,
+      "explain": "geometry 負責邊界與紙張；setspace 管行距；graphicx 管圖片；apacite 管參考文獻格式。"
+    },
+    {
+      "type": "choice",
+      "q": "想把行距設成 1.5 倍，應該使用哪個指令（需先載入 setspace）？",
+      "options": [
+        "\\onehalfspacing",
+        "\\doublespacing",
+        "\\vfill",
+        "\\centering"
+      ],
+      "answer": 0,
+      "explain": "\\onehalfspacing 是 1.5 倍行高，\\doublespacing 是兩倍。"
+    },
+    {
+      "type": "tf",
+      "q": "在某一行語法前面加上 %，這一行會被暫時停用。",
+      "answer": true,
+      "explain": "對，% 後面都視為註解，除錯時很好用。"
+    },
+    {
+      "type": "fill",
+      "q": "載入調整行距的套件：",
+      "code": "\\usepackage{___}",
+      "answers": [
+        "setspace"
+      ],
+      "hints": [
+        "set 開頭，和「space（空間）」有關",
+        "set + space"
+      ],
+      "explain": "setspace 提供 \\doublespacing、\\onehalfspacing 等指令。"
+    },
+    {
+      "type": "fill",
+      "q": "補完第二層標題的指令：",
+      "code": "\\___{什麼是 LaTeX}",
+      "answers": [
+        "subsection"
+      ],
+      "hints": [
+        "比 section 多了一個前綴 sub",
+        "sub + section"
+      ],
+      "explain": "\\subsection 是 \\section 底下的子標題，編號會自動接在章節編號後面。"
+    }
+  ],
+  "lab": {
+    "type": "layout",
+    "task": "把邊界調成 2 cm，行距設成 1.5 倍。"
+  }
+}

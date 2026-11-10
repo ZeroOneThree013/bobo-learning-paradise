@@ -1,0 +1,124 @@
+{
+  "id": "u11",
+  "n": 11,
+  "icon": "🎞️",
+  "title": "Beamer 簡報",
+  "sub": "frame、標題頁、主題、\\pause",
+  "official": [
+    {
+      "label": "Beamer（Overleaf 官方）",
+      "url": "https://www.overleaf.com/learn/latex/beamer"
+    }
+  ],
+  "cards": [
+    {
+      "t": "官方補充：用 Beamer 做簡報",
+      "body": "前面十個單元都在做報告，其實 LaTeX 也能做簡報。只要把文件類型換成 `beamer`，每一張投影片就放在一個 `frame` 環境裡。\n\n`\\frametitle` 用來設定這張投影片的標題，是選填的。一個 frame 還可以產生好幾頁投影片，後面的 `\\pause` 就是這樣用的。",
+      "code": "\\documentclass{beamer}\n\n\\begin{document}\n\\begin{frame}\n  \\frametitle{第一張投影片}\n  Hello, Beamer!\n\\end{frame}\n\\end{document}",
+      "url": "https://www.overleaf.com/learn/latex/beamer",
+      "label": "官方：Beamer",
+      "sup": true
+    },
+    {
+      "t": "官方補充：標題頁與目錄",
+      "body": "標題頁的資料寫在 `\\begin{document}` 之前：`\\title`、`\\author`、`\\date`，需要的話再加 `\\institute`。接著用 `\\frame{\\titlepage}` 把它變成第一張投影片。\n\n目錄也放在一個 frame 裡，用 `\\tableofcontents` 產生。",
+      "code": "\\title{我的第一份簡報}\n\\author{小博}\n\\date{2026}\n\n\\begin{document}\n\\frame{\\titlepage}\n\n\\begin{frame}\n  \\frametitle{目錄}\n  \\tableofcontents\n\\end{frame}\n\\end{document}",
+      "url": "https://www.overleaf.com/learn/latex/beamer",
+      "label": "官方：標題頁與目錄",
+      "sup": true
+    },
+    {
+      "t": "官方補充：讓內容一步一步出現",
+      "body": "在 frame 裡加上 `\\pause`，它後面的文字要等到下一頁才會出現，講解時可以一句一句帶出來。\n\n清單也可以控制：在 `\\item` 後面加 `<1->`，代表從第 1 頁開始顯示；加 `<3>` 則只在第 3 頁出現。",
+      "code": "\\begin{frame}\n  \\frametitle{一步一步講}\n  先講這一句。\n  \\pause\n  再講這一句。\n\\end{frame}",
+      "url": "https://www.overleaf.com/learn/latex/beamer",
+      "label": "官方：Beamer",
+      "sup": true
+    },
+    {
+      "t": "官方補充：換個主題",
+      "body": "`\\usetheme` 可以一次換掉整份簡報的外觀，例如 `Madrid`、`Berkeley`、`Copenhagen`。\n\n想再調整配色，就用 `\\usecolortheme`。要注意：它必須寫在 `\\usetheme` 的後面。",
+      "code": "\\usetheme{Madrid}\n\\usecolortheme{beaver}",
+      "url": "https://www.overleaf.com/learn/latex/beamer",
+      "label": "官方：主題與配色",
+      "sup": true
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "要做簡報，\\documentclass 後面的大括號要放什麼？",
+      "options": [
+        "article",
+        "beamer",
+        "presentation",
+        "report"
+      ],
+      "answer": 1,
+      "explain": "Beamer 是 LaTeX 做簡報用的文件類型，所以寫 \\documentclass{beamer}。article 和 report 是一般文章與報告用的。"
+    },
+    {
+      "type": "choice",
+      "q": "在 Beamer 裡，每一張投影片的內容要放在哪個環境？",
+      "options": [
+        "document",
+        "slide",
+        "section",
+        "frame"
+      ],
+      "answer": 3,
+      "explain": "每張投影片放在 \\begin{frame} 與 \\end{frame} 之間，\\frametitle 可以替它加標題。"
+    },
+    {
+      "type": "tf",
+      "q": "\\usecolortheme 必須寫在 \\usetheme 的後面。",
+      "answer": true,
+      "explain": "沒錯，先用 \\usetheme 選好主題，再用 \\usecolortheme 調整配色，順序反過來就不會照預期運作。"
+    },
+    {
+      "type": "fill",
+      "q": "補上指令，讓第一張投影片變成標題頁：",
+      "code": "\\frame{\\___}",
+      "answers": [
+        "titlepage"
+      ],
+      "hints": [
+        "英文意思是「標題頁」",
+        "t 開頭，共 9 個字母"
+      ],
+      "explain": "\\frame{\\titlepage} 會用你在前置區設定的 \\title、\\author、\\date 做出標題頁。"
+    },
+    {
+      "type": "fill",
+      "q": "補上指令，做出一頁目錄：",
+      "code": "\\begin{frame}\n  \\frametitle{目錄}\n  \\___\n\\end{frame}",
+      "answers": [
+        "tableofcontents"
+      ],
+      "hints": [
+        "英文意思是「內容目錄」",
+        "t 開頭，共 15 個字母"
+      ],
+      "explain": "\\tableofcontents 會依照章節自動產生目錄，放在一個 frame 裡就是一頁目錄投影片。"
+    }
+  ],
+  "lab": {
+    "type": "sort",
+    "task": "把打亂的程式行排成能編譯的 Beamer 標題頁，再按「檢查順序」。",
+    "lines": [
+      "\\frame{\\titlepage}",
+      "\\documentclass{beamer}",
+      "\\end{document}",
+      "\\title{我的第一份簡報}",
+      "\\begin{document}"
+    ],
+    "answer": [
+      "\\documentclass{beamer}",
+      "\\title{我的第一份簡報}",
+      "\\begin{document}",
+      "\\frame{\\titlepage}",
+      "\\end{document}"
+    ],
+    "hint": "最前面要先宣告 beamer；\\title 屬於前置設定，要寫在 \\begin{document} 之前；標題頁 \\frame{\\titlepage} 要放在 begin 和 end 之間。"
+  }
+}

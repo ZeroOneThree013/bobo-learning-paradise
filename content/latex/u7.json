@@ -1,0 +1,104 @@
+{
+  "id": "u7",
+  "n": 7,
+  "icon": "📊",
+  "title": "表格",
+  "sub": "tabular 與表格產生器",
+  "official": [
+    {
+      "label": "Tables",
+      "url": "https://www.overleaf.com/learn/latex/Tables"
+    },
+    {
+      "label": "Generating and inserting tables",
+      "url": "https://docs.overleaf.com/writing-and-editing/generating-and-inserting-tables"
+    }
+  ],
+  "cards": [
+    {
+      "t": "表格的基本結構",
+      "body": "`tabular` 標出表格的開始和結束。旁邊大括號裡，一個字母代表一欄：`c` 置中、`l` 靠左、`r` 靠右；字母之間的 `|` 表示垂直線。\n\n水平線用 `\\hline`。同一列的各格用 `&` 隔開，換行用 `\\\\`。",
+      "code": "\\begin{tabular}{|c|c|c|}\n  \\hline\n  姓名 & 科目 & 分數 \\\\\n  \\hline\n  小明 & 數學 & 90 \\\\\n  \\hline\n\\end{tabular}",
+      "url": "https://www.overleaf.com/learn/latex/Tables",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "加上標題與位置",
+      "body": "表格和圖表很像：外面包一層 `table` 環境，就能置中、加標題 `\\caption`、設定 `\\label` 讓文中參照，也可以用 `[h]` 控制位置。",
+      "code": "\\begin{table}[h]\n  \\centering\n  \\begin{tabular}{|c|c|}\n    ...\n  \\end{tabular}\n  \\caption{成績表}\n  \\label{tab:score}\n\\end{table}"
+    },
+    {
+      "t": "官方補充：不用全部手寫",
+      "body": "手寫表格語法對初學者不太直覺。影片示範用網路上的表格產生器：貼上 Word 或 Excel 的資料，設定對齊、粗體、格線，就能輸出語法。\n\n官方文件提到，Overleaf 現在也有 Insert Table 按鈕和自己的表格產生器。下一頁的實作，就是小博做的簡易版產生器。",
+      "url": "https://docs.overleaf.com/writing-and-editing/generating-and-inserting-tables",
+      "label": "官方：表格產生器",
+      "sup": true
+    },
+    {
+      "t": "特殊符號要小心",
+      "body": "`&`、`%`、`$`、`#`、`_` 在 LaTeX 裡有特殊用途。如果表格內容真的要出現這些字元，前面要加反斜線，例如寫成 `\\&`、`\\%`。\n\nBoBo 的產生器會幫你自動處理這件事。"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "表格欄位設定 {|c|c|c|} 代表什麼？",
+      "options": [
+        "三欄、每欄置中，欄與欄之間有垂直線",
+        "三列、每列置中",
+        "三個獨立的表格",
+        "三種不同的顏色"
+      ],
+      "answer": 0,
+      "explain": "一個字母是一欄，c 是置中，| 是垂直線。"
+    },
+    {
+      "type": "choice",
+      "q": "同一列裡，不同格的資料要用哪個符號隔開？",
+      "options": [
+        "&",
+        "\\\\",
+        "%",
+        "$"
+      ],
+      "answer": 0,
+      "explain": "格與格之間用 &；一列結束要換行時才用 \\\\。"
+    },
+    {
+      "type": "tf",
+      "q": "\\hline 的作用是畫水平格線。",
+      "answer": true,
+      "explain": "對，\\hline 畫一條橫線；直線則靠欄位設定裡的 |。"
+    },
+    {
+      "type": "fill",
+      "q": "欄位設定中，要讓文字靠左對齊的字母：",
+      "code": "\\begin{tabular}{|c|___|c|}",
+      "answers": [
+        "l"
+      ],
+      "hints": [
+        "是 left（左）的第一個字母",
+        "小寫的 L"
+      ],
+      "explain": "l = left 靠左、c = center 置中、r = right 靠右。"
+    },
+    {
+      "type": "fill",
+      "q": "一列結束、要換行時，在列尾寫：",
+      "code": "小明 & 數學 & 90 ___",
+      "answers": [
+        "\\\\"
+      ],
+      "hints": [
+        "和文字換行用的是同一個符號",
+        "兩個反斜線"
+      ],
+      "explain": "列尾用兩個反斜線 \\\\ 換行。"
+    }
+  ],
+  "lab": {
+    "type": "table",
+    "task": "做出一個 3 欄以上、每欄都置中、有垂直線與水平線的表格。"
+  }
+}

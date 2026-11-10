@@ -1,0 +1,111 @@
+{
+  "id": "u4",
+  "n": 4,
+  "icon": "🎓",
+  "title": "封面製作",
+  "sub": "置中、字級、間距、插圖",
+  "official": [
+    {
+      "label": "Font sizes, families, and styles",
+      "url": "https://www.overleaf.com/learn/latex/Font_sizes,_families,_and_styles"
+    },
+    {
+      "label": "Lengths in LaTeX",
+      "url": "https://www.overleaf.com/learn/latex/Lengths_in_LaTeX"
+    },
+    {
+      "label": "Inserting Images",
+      "url": "https://www.overleaf.com/learn/latex/Inserting_Images"
+    }
+  ],
+  "cards": [
+    {
+      "t": "分段與換行",
+      "body": "編輯器裡只按一次 Enter，LaTeX 還是把相鄰的行接成同一段。要真的分段，需要空一行。\n\n另一個換行的方式是在句尾輸入兩個反斜線 `\\\\`，但這樣分開的文字本質上仍屬於同一個段落。",
+      "code": "資訊素養\n\nLaTeX 期末報告 \\\\\n王小明"
+    },
+    {
+      "t": "置中與文字大小",
+      "body": "用 `center` 環境把內容水平置中。文字大小的指令放在句子前面，後面的文字就會跟著縮放：`\\small` 縮小、`\\large` 放大，更大還有 `\\Huge`。\n\n全大寫的 `\\HUGE` 需要另外載入 `moresize` 套件。粗體用 `\\textbf{…}` 包住文字。",
+      "code": "\\begin{center}\n  {\\Huge \\textbf{LaTeX 期末報告}}\n\\end{center}",
+      "url": "https://www.overleaf.com/learn/latex/Font_sizes,_families,_and_styles",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "垂直間距：vspace 與 vfill",
+      "body": "`\\vspace{長度}` 在段落之間加大垂直距離。如果上方沒有任何段落（例如頁面最上面），要寫成 `\\vspace*{長度}`，才會真的留白。\n\n`\\vfill` 會把它後面的內容推到頁面底部，很適合放學生與指導教授資訊。另一種做法是在 `\\\\` 後面加方括號，例如 `\\\\[1cm]`，也能加大行距。",
+      "code": "\\vspace*{3cm}\n...\n\\vfill\n指導教授：李老師",
+      "url": "https://www.overleaf.com/learn/latex/Lengths_in_LaTeX",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "插入校徽或圖片",
+      "body": "先把圖檔上傳到 Overleaf，載入 `graphicx` 套件，再用 `\\includegraphics` 插入圖片。如果圖片太大，在方括號裡設定寬度，例如 `width=4cm`。",
+      "code": "\\usepackage{graphicx}\n...\n\\includegraphics[width=4cm]{logo}",
+      "url": "https://www.overleaf.com/learn/latex/Inserting_Images",
+      "label": "官方怎麼說"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "頁面最上方想留白，但 \\vspace 上面沒有任何段落，應該怎麼寫？",
+      "options": [
+        "\\vspace*{2cm}",
+        "\\vspace{2cm}",
+        "\\vfill{2cm}",
+        "\\hspace*{2cm}"
+      ],
+      "answer": 0,
+      "explain": "上方沒有段落時，\\vspace 要加星號寫成 \\vspace*，留白才不會被忽略。"
+    },
+    {
+      "type": "choice",
+      "q": "哪個指令能把後面的內容推到頁面底部？",
+      "options": [
+        "\\vfill",
+        "\\centering",
+        "\\textbf",
+        "\\small"
+      ],
+      "answer": 0,
+      "explain": "\\vfill 會把空白填滿，讓它後面的內容貼到頁面底部。"
+    },
+    {
+      "type": "tf",
+      "q": "\\textbf{標題} 的作用是把文字變成粗體。",
+      "answer": true,
+      "explain": "對，\\textbf 就是粗體。"
+    },
+    {
+      "type": "fill",
+      "q": "讓內容水平置中的環境：",
+      "code": "\\begin{___}",
+      "answers": [
+        "center"
+      ],
+      "hints": [
+        "英文意思是「中心」",
+        "c 開頭，共 6 個字母"
+      ],
+      "explain": "center 環境會讓包住的內容水平置中。"
+    },
+    {
+      "type": "fill",
+      "q": "要插入圖片，先載入哪個套件？",
+      "code": "\\usepackage{___}",
+      "answers": [
+        "graphicx"
+      ],
+      "hints": [
+        "名稱和 graphics（圖形）有關，結尾有個 x",
+        "graphic + x"
+      ],
+      "explain": "graphicx 提供 \\includegraphics，用來插入圖片。"
+    }
+  ],
+  "lab": {
+    "type": "cover",
+    "task": "做出標題置中、使用 \\HUGE、粗體，作者資訊用 \\vfill 放在底部的封面。"
+  }
+}

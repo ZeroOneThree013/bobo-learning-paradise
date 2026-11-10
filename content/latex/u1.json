@@ -1,0 +1,103 @@
+{
+  "id": "u1",
+  "n": 1,
+  "icon": "🚀",
+  "title": "起步與文件結構",
+  "sub": "LaTeX 是什麼、Overleaf、文件骨架",
+  "official": [
+    {
+      "label": "Learn LaTeX in 30 minutes",
+      "url": "https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes"
+    }
+  ],
+  "cards": [
+    {
+      "t": "LaTeX 是什麼？",
+      "body": "LaTeX 是一套排版系統：你專心寫內容，版面、編號、目錄交給它處理。用 Word 寫報告時常遇到縮排距離不一致、標題編號對不上，用 LaTeX 比較不容易發生。\n\n它免費又開源。你寫好的語法會被「編譯」，輸出成排版整齊的 PDF。"
+    },
+    {
+      "t": "先用 Overleaf 練習",
+      "body": "第一次接觸 LaTeX，比較省事的做法是用雲端版的 **Overleaf**：用 Email 或 Google 帳號註冊，按「建立」，就能開空白文件，也能從論文、期刊、書籍、商業信件等範本開始。\n\n編輯畫面左邊寫語法，右邊看編譯後的排版結果。範本也是學語法的好素材。",
+      "url": "https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes",
+      "label": "官方：30 分鐘入門"
+    },
+    {
+      "t": "文件的基本骨架",
+      "body": "`\\documentclass` 先決定文件類型：大括號放類型，一般書面報告用 `article`；方括號放輔助設定，例如字體大小 `11pt`。\n\n`\\begin{document}` 和 `\\end{document}` 是一對標籤，正文都寫在它們中間。LaTeX 的指令都以反斜線開頭。",
+      "code": "\\documentclass[11pt]{article}\n\n\\begin{document}\nHello, LaTeX!\n\\end{document}"
+    },
+    {
+      "t": "編譯與小技巧",
+      "body": "寫好之後，按右上角的 Recompile，或按 Ctrl + Enter，右邊就會更新成最新結果。\n\n輸入指令輸入到一半時，編輯器會跳出提示；看到符合的項目，按 Tab 或 Enter 就能自動補完。"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "LaTeX 的指令都以哪個符號開頭？",
+      "options": [
+        "反斜線 \\ ",
+        "百分比 %",
+        "貨幣符號 $",
+        "星號 *"
+      ],
+      "answer": 0,
+      "explain": "LaTeX 指令一律從反斜線開始，例如 \\documentclass、\\section。"
+    },
+    {
+      "type": "choice",
+      "q": "寫一般書面報告時，\\documentclass 後面的大括號通常放什麼？",
+      "options": [
+        "article",
+        "document",
+        "11pt",
+        "center"
+      ],
+      "answer": 0,
+      "explain": "大括號放文件類型，報告常用 article。11pt 是放在方括號的輔助設定。"
+    },
+    {
+      "type": "tf",
+      "q": "\\begin{document} 與 \\end{document} 中間，才是文件的正文內容。",
+      "answer": true,
+      "explain": "沒錯，這一對標籤框住整份文件的內容；套件與設定通常寫在 \\begin{document} 之前。"
+    },
+    {
+      "type": "fill",
+      "q": "補上文件類型，讓它成為一般報告：",
+      "code": "\\documentclass[11pt]{___}",
+      "answers": [
+        "article"
+      ],
+      "hints": [
+        "一般書面報告用的類型，英文意思是「文章」",
+        "a 開頭，共 7 個字母"
+      ],
+      "explain": "article 是最常用的報告類型。其他類型還有書籍、簡報等，版面與章節設計都不一樣。"
+    },
+    {
+      "type": "fill",
+      "q": "補完結尾標籤：",
+      "code": "\\end{___}",
+      "answers": [
+        "document"
+      ],
+      "hints": [
+        "要和 \\begin{document} 成對",
+        "英文意思是「文件」"
+      ],
+      "explain": "\\begin{document} 和 \\end{document} 要成對出現。"
+    }
+  ],
+  "lab": {
+    "type": "sort",
+    "task": "把打亂的程式行排成能編譯的正確順序，再按「檢查順序」。",
+    "lines": [
+      "Hello, LaTeX!",
+      "\\usepackage{geometry}",
+      "\\end{document}",
+      "\\documentclass[11pt]{article}",
+      "\\begin{document}"
+    ]
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "id": "u9",
+  "n": 9,
+  "icon": "📚",
+  "title": "參考文獻",
+  "sub": ".bib、cite、bibliography",
+  "official": [
+    {
+      "label": "Bibliography management with bibtex",
+      "url": "https://www.overleaf.com/learn/latex/Bibliography_management_with_bibtex"
+    },
+    {
+      "label": "Bibliography management with biblatex",
+      "url": "https://www.overleaf.com/learn/latex/Bibliography_management_with_biblatex"
+    }
+  ],
+  "cards": [
+    {
+      "t": "準備 .bib 檔",
+      "body": "文獻資料放在副檔名為 `.bib` 的檔案裡。先在 Overleaf 新增一個空白文件，副檔名設成 `.bib`。\n\n接著到網路上找到要引用的文獻，點「引用」，再選 BibTeX，就會出現一段語法；複製後貼進 `.bib` 檔，重複同樣步驟加入其他文獻。（下面是虛構的範例。）",
+      "code": "@article{smith2021,\n  author  = {Smith, Amy},\n  title   = {An Example Article},\n  journal = {Example Journal},\n  year    = {2021}\n}",
+      "url": "https://www.overleaf.com/learn/latex/Bibliography_management_with_bibtex",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "在文件裡接上書目",
+      "body": "文件開頭先載入 `apacite` 套件。在想放參考文獻的地方（影片先用 `\\newpage` 換一頁），用 `\\bibliography{檔名}` 匯入書目，再用 `\\bibliographystyle{…}` 指定清單格式。\n\n`\\bibliography` 後面的檔名不用加 `.bib`。",
+      "code": "\\usepackage{apacite}\n...\n\\newpage\n\\bibliographystyle{apacite}\n\\bibliography{refs}"
+    },
+    {
+      "t": "用 \\cite 引用",
+      "body": "文章裡用 `\\cite{鍵值}` 引用文獻，鍵值就是 `.bib` 裡 `@article{` 後面的名字。編譯時 LaTeX 會把文中引用到的文獻，自動彙整到參考文獻頁面。\n\n在 Overleaf 上，需要重複編譯才能完成的步驟會自動處理，不必自己多按幾次。",
+      "code": "這種做法很常見 \\cite{smith2021}。",
+      "url": "https://www.overleaf.com/learn/latex/Bibliography_management_with_bibtex",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "官方補充：新專案可考慮 biblatex",
+      "body": "官方文件提到，如果是從零開始的新專案，建議使用 **biblatex**：它支援多語系、持續維護，管理起來更彈性。\n\n影片示範的 `apacite` 搭配 BibTeX 仍然可以用，適合需要 APA 格式的情境。",
+      "url": "https://www.overleaf.com/learn/latex/Bibliography_management_with_biblatex",
+      "label": "官方：biblatex",
+      "sup": true
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "存放參考文獻資料的檔案，副檔名是什麼？",
+      "options": [
+        ".bib",
+        ".tex",
+        ".pdf",
+        ".png"
+      ],
+      "answer": 0,
+      "explain": "文獻資料庫放在 .bib 檔；.tex 是文件本身。"
+    },
+    {
+      "type": "choice",
+      "q": "文章中要引用文獻，使用哪個指令？",
+      "options": [
+        "\\cite{鍵值}",
+        "\\ref{鍵值}",
+        "\\footnote{鍵值}",
+        "\\label{鍵值}"
+      ],
+      "answer": 0,
+      "explain": "\\cite 引用文獻；\\ref 是參照圖表、章節編號。"
+    },
+    {
+      "type": "tf",
+      "q": "匯入書目時，\\bibliography{refs} 的檔名要寫成 refs.bib。",
+      "answer": false,
+      "explain": "不用加副檔名，寫 \\bibliography{refs} 就會讀 refs.bib。"
+    },
+    {
+      "type": "fill",
+      "q": "文中引用文獻：",
+      "code": "\\___{smith2021}",
+      "answers": [
+        "cite"
+      ],
+      "hints": [
+        "英文意思是「引用」",
+        "c 開頭，共 4 個字母"
+      ],
+      "explain": "\\cite{鍵值} 會在文中放入引用，並把文獻收進參考文獻清單。"
+    },
+    {
+      "type": "fill",
+      "q": "匯入書目檔 refs.bib：",
+      "code": "\\___{refs}",
+      "answers": [
+        "bibliography"
+      ],
+      "hints": [
+        "名字就是「書目」的英文，很長",
+        "biblio + graphy"
+      ],
+      "explain": "\\bibliography{檔名} 用來匯入書目檔，檔名不含 .bib。"
+    }
+  ],
+  "lab": {
+    "type": "cite",
+    "task": "引用至少兩篇文獻，並加上 \\bibliographystyle 與 \\bibliography 兩行，讓參考文獻出現。"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "id": "u6",
+  "n": 6,
+  "icon": "🖼️",
+  "title": "圖表",
+  "sub": "figure、位置、label 與 ref",
+  "official": [
+    {
+      "label": "Inserting Images",
+      "url": "https://www.overleaf.com/learn/latex/Inserting_Images"
+    },
+    {
+      "label": "Positioning figures",
+      "url": "https://docs.overleaf.com/writing-and-editing/inserting-images/positioning-figures"
+    },
+    {
+      "label": "Positioning images and tables",
+      "url": "https://www.overleaf.com/learn/latex/Positioning_images_and_tables"
+    },
+    {
+      "label": "Cross referencing",
+      "url": "https://www.overleaf.com/learn/latex/Cross_referencing_sections,_equations_and_floats"
+    }
+  ],
+  "cards": [
+    {
+      "t": "插入圖表：figure",
+      "body": "圖檔要先上傳到 Overleaf，再用 `figure` 環境放進文件。常見的幾個標籤：`\\centering` 置中、`\\includegraphics` 指定圖檔、`\\caption` 是圖下方的說明、`\\label` 是之後參照用的記號。",
+      "code": "\\begin{figure}[h]\n  \\centering\n  \\includegraphics[width=0.7\\textwidth]{plot}\n  \\caption{成績分布}\n  \\label{fig:plot}\n\\end{figure}",
+      "url": "https://www.overleaf.com/learn/latex/Inserting_Images",
+      "label": "官方怎麼說"
+    },
+    {
+      "t": "為什麼圖跑掉了？",
+      "body": "`figure` 是「浮動體」：LaTeX 會自己決定它放在哪，所以編譯後的位置可能和原始碼不一樣。\n\n不想讓它自己決定，就在 `\\begin{figure}` 旁邊加位置參數，例如 `[h]`（here，放在這裡）；把圖片的比例縮小一點也有幫助。"
+    },
+    {
+      "t": "官方補充：位置參數全表",
+      "body": "官方列出的位置參數：\n\n`h`：大約放在原始碼的位置（不保證精確）。\n`t`：頁面頂端。`b`：頁面底端。\n`p`：專門放浮動體的頁面。\n`!`：覆蓋 LaTeX 判斷「好位置」的內部設定。\n`H`：大致等同於 `h!`（實際使用時通常要載入 float 套件）。",
+      "url": "https://docs.overleaf.com/writing-and-editing/inserting-images/positioning-figures",
+      "label": "官方：Positioning figures",
+      "sup": true
+    },
+    {
+      "t": "參照：label、ref、pageref",
+      "body": "`\\label` 取好名字之後，在文中用 `\\ref{名字}`，LaTeX 就會把圖表的編號插進去；用 `\\pageref{名字}` 則會插入圖表所在的頁碼。\n\n注意：`\\label` 要放在 `\\caption` 後面，編號才會抓對。圖表增減時，編號會自動更新。",
+      "code": "如圖 \\ref{fig:plot} 所示，\n詳見第 \\pageref{fig:plot} 頁。",
+      "url": "https://www.overleaf.com/learn/latex/Cross_referencing_sections,_equations_and_floats",
+      "label": "官方怎麼說"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "圖編譯後的位置和原始碼不一致，最常見的處理方式是？",
+      "options": [
+        "在 figure 旁加位置參數，例如 [h]",
+        "把圖片刪掉重新上傳",
+        "改用 Word 排版",
+        "把 caption 刪掉"
+      ],
+      "answer": 0,
+      "explain": "figure 是浮動體，加上 [h] 可以要求它放在原始碼附近。"
+    },
+    {
+      "type": "choice",
+      "q": "哪個位置參數代表「放在頁面頂端」？",
+      "options": [
+        "t",
+        "b",
+        "h",
+        "p"
+      ],
+      "answer": 0,
+      "explain": "t = top（頂端）、b = bottom（底端）、h = here（這裡）、p = 浮動體專用頁。"
+    },
+    {
+      "type": "tf",
+      "q": "\\pageref{名字} 會把該圖表所在的頁碼插入文中。",
+      "answer": true,
+      "explain": "對。\\ref 插入編號，\\pageref 插入頁碼。"
+    },
+    {
+      "type": "fill",
+      "q": "在文中參照圖表的編號：如圖",
+      "code": "\\___{fig:plot} 所示",
+      "answers": [
+        "ref"
+      ],
+      "hints": [
+        "三個字母，是 reference（參照）的縮寫",
+        "r 開頭"
+      ],
+      "explain": "\\ref{名字} 會自動換成圖表的編號。"
+    },
+    {
+      "type": "fill",
+      "q": "圖表下方的說明文字指令：",
+      "code": "\\___{成績分布}",
+      "answers": [
+        "caption"
+      ],
+      "hints": [
+        "英文意思是「標題、說明文字」",
+        "c 開頭，共 7 個字母"
+      ],
+      "explain": "\\caption{…} 會在圖或表旁邊加上說明，並自動編號。"
+    }
+  ],
+  "lab": {
+    "type": "float",
+    "task": "先讓圖片出現在頁面頂端（t），再把 label 與 ref 的名字填對。"
+  }
+}
