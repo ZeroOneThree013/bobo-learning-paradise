@@ -26,4 +26,3 @@ function legacyCopy(t) {
     const ok = document.execCommand('copy'); ta.remove(); return ok;
   } catch (e) { return false; }
 }
-const OVERLEAF_NOTE = '這裡是簡化模擬，真正的編譯結果請到 Overleaf 確認。';

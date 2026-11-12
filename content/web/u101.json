@@ -1,0 +1,114 @@
+{
+  "id": "u101",
+  "n": 1,
+  "icon": "🗃️",
+  "title": "認識 SQL 與 SELECT",
+  "sub": "SQL 是什麼、Sqliteviz、SELECT、LIMIT 與 OFFSET",
+  "official": [
+    {
+      "label": "SQLite：SELECT",
+      "url": "https://www.sqlite.org/lang_select.html"
+    }
+  ],
+  "cards": [
+    {
+      "t": "SQL 是什麼？",
+      "body": "SQL 是專門和資料庫「對話」的程式語言：你可以用它查詢、新增或更新資料。常需要做資料分析和決策的人，會把它當成核心技能。\n\nSQL 會在「資料庫管理系統」裡執行，例如 MySQL、PostgreSQL、Microsoft SQL Server 和 Oracle。\n\n這本書用 **Sqliteviz** 練習：它在瀏覽器裡就能執行 SQL（底層是 SQLite 資料庫），不用安裝任何軟體，很適合初學者。",
+      "url": "https://github.com/lana-k/sqliteviz",
+      "label": "Sqliteviz 專案頁"
+    },
+    {
+      "t": "匯入資料表與寫註解",
+      "body": "影片說明欄附了一個練習用的表格檔，裡面是學生的姓名、班級、考試成績和社團編號。把檔案拖曳到 Sqliteviz 頁面，它會自動建立同名的表格；接著按右下角「匯入」，再按「完成」，就進入主要操作畫面。\n\n在上方窗格寫 SQL。`/* … */` 包起來的灰色文字是「註解」，用來說明程式碼；只有一行的註解，可以直接在開頭加兩條橫線 `--`。",
+      "code": "-- 這是一行註解\n/* 這是\n   多行註解 */\nSELECT * FROM students;"
+    },
+    {
+      "t": "SELECT：把資料叫出來",
+      "body": "`SELECT` 是「選取」，`*` 代表表格裡所有欄位，`FROM students` 表示從 students 這個表格檢索。\n\n結尾加分號 `;` 表示語句結束。有些資料庫可以省略，但加上分號是好習慣。表格名稱要不要加雙引號，取決於你用的資料庫；在 Sqliteviz 的範例裡可以省略。\n\n執行方式：按右側工具列的「執行」，或按 Ctrl + Enter。如果只想看部分欄位，就把 `*` 換成欄位名稱，用逗號隔開。",
+      "code": "SELECT 姓名, 班級, 成績\nFROM students;"
+    },
+    {
+      "t": "LIMIT 與 OFFSET",
+      "body": "表格如果有數十萬、上百萬筆，每次都回傳全部資料會拖慢系統。用 `LIMIT` 限制回傳的筆數，例如 `LIMIT 5` 只看前 5 筆。\n\n想看接下來的 5 筆，再用 `OFFSET` 跳過前面的筆數：`OFFSET 5` 會從第 6 筆開始，`OFFSET 10` 則從第 11 筆開始。\n\n這些關鍵字可以寫在同一行，但建議每個關鍵字分一行，結構一目了然，之後維護也比較輕鬆。",
+      "code": "SELECT 姓名, 班級, 成績\nFROM students\nLIMIT 5\nOFFSET 5;"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "SQL 主要是用來做什麼？",
+      "options": [
+        "設計網頁的版面樣式",
+        "和資料庫互動：查詢、新增、更新資料",
+        "把圖片壓縮成較小的檔案",
+        "撰寫手機 App 的畫面"
+      ],
+      "answer": 1,
+      "explain": "SQL 是和資料庫溝通的語言，常見用途就是查詢、新增和更新資料。"
+    },
+    {
+      "type": "choice",
+      "q": "想看「第 6 到第 10 筆」資料，LIMIT 與 OFFSET 要怎麼搭配？",
+      "options": [
+        "LIMIT 5 OFFSET 0",
+        "LIMIT 10 OFFSET 5",
+        "LIMIT 5 OFFSET 10",
+        "LIMIT 5 OFFSET 5"
+      ],
+      "answer": 3,
+      "explain": "先用 OFFSET 5 跳過前 5 筆，再用 LIMIT 5 取 5 筆，就是第 6 到第 10 筆。OFFSET 10 會從第 11 筆開始。"
+    },
+    {
+      "type": "tf",
+      "q": "在 SQL 裡，只有一行的註解，可以在開頭加兩條橫線 --。",
+      "answer": true,
+      "explain": "沒錯。多行的註解則用 /* 開頭、*/ 結尾包起來。"
+    },
+    {
+      "type": "fill",
+      "q": "補上關鍵字，選取所有欄位：",
+      "code": "___ * FROM students;",
+      "answers": [
+        "select"
+      ],
+      "ci": true,
+      "hints": [
+        "中文意思是「選取」",
+        "s 開頭，共 6 個字母"
+      ],
+      "explain": "SELECT 是「選取」，後面接要看的欄位；* 代表所有欄位。SQL 關鍵字大小寫都可以。"
+    },
+    {
+      "type": "fill",
+      "q": "補上關鍵字，只回傳前 3 筆資料：",
+      "code": "SELECT * FROM students\n___ 3;",
+      "answers": [
+        "limit"
+      ],
+      "ci": true,
+      "hints": [
+        "中文意思是「限制」",
+        "l 開頭，共 5 個字母"
+      ],
+      "explain": "LIMIT 用來限制回傳的筆數，資料很多時可以避免一次回傳太多而影響效能。"
+    }
+  ],
+  "lab": {
+    "type": "sort",
+    "task": "把打亂的 SQL 排成「顯示第 6 到第 10 筆的姓名、班級、成績」，再按「檢查順序」。",
+    "lines": [
+      "OFFSET 5;",
+      "FROM students",
+      "LIMIT 5",
+      "SELECT 姓名, 班級, 成績"
+    ],
+    "answer": [
+      "SELECT 姓名, 班級, 成績",
+      "FROM students",
+      "LIMIT 5",
+      "OFFSET 5;"
+    ],
+    "hint": "SELECT 最先寫，接著是 FROM；LIMIT 要寫在 OFFSET 前面，分號放在最後一行。",
+    "ok": "順序正確，這段 SQL 可以執行了！"
+  }
+}

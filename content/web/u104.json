@@ -1,0 +1,115 @@
+{
+  "id": "u104",
+  "n": 4,
+  "icon": "📊",
+  "title": "匯總與分組",
+  "sub": "AVG、COUNT、AS、ROUND、GROUP BY、HAVING、DISTINCT",
+  "official": [
+    {
+      "label": "SQLite：匯總函數",
+      "url": "https://www.sqlite.org/lang_aggfunc.html"
+    }
+  ],
+  "cards": [
+    {
+      "t": "匯總函數與別名",
+      "body": "SQL 和 Excel 很像，可以用函數對多筆資料做匯總計算：`AVG` 平均、`SUM` 加總、`MAX` 最大值、`MIN` 最小值、`COUNT` 計算數量。\n\n欄位名稱看起來不直觀時，可以用 `AS` 取「別名」。平均分數常有很多位小數，可以用 `ROUND` 四捨五入：`ROUND(AVG(成績), 1)` 保留一位小數；省略後面的數字就是四捨五入到整數。",
+      "code": "SELECT\n  ROUND(AVG(成績), 1) AS 成績平均,\n  MAX(成績) AS 最高分,\n  MIN(成績) AS 最低分\nFROM students;"
+    },
+    {
+      "t": "GROUP BY：各班的平均",
+      "body": "想知道的不是全班的平均，而是「各班」的平均，就在最後加上 `GROUP BY 班級`：資料會先依班級分組，再對每一組做匯總。\n\n需要的話，還可以搭配剛學的 ORDER BY，把結果改成由高排到低。",
+      "code": "SELECT 班級, AVG(成績) AS 成績平均\nFROM students\nGROUP BY 班級\nORDER BY 成績平均 DESC;"
+    },
+    {
+      "t": "HAVING 與子句順序",
+      "body": "`WHERE` 篩選的是原始資料；對 GROUP BY 分組後的結果做篩選，要改用 `HAVING`。例如只列出平均大於等於 80 分的班級。\n\nSQL 的關鍵字有固定順序：`GROUP BY` 要在 `HAVING` 之前（因為 HAVING 篩選的是分組結果），`ORDER BY` 要在 `LIMIT` 之前（資料要先排序，才能限制筆數）。順序放錯，就會出現錯誤訊息。",
+      "code": "SELECT 班級, AVG(成績) AS 成績平均\nFROM students\nGROUP BY 班級\nHAVING AVG(成績) >= 80;"
+    },
+    {
+      "t": "COUNT 與 DISTINCT",
+      "body": "`COUNT(*)` 計算整個表格的總行數（影片範例是 18 筆）。`COUNT(社團)` 在計算單一欄位時，會自動忽略空值（NULL）：18 筆扣掉 2 個空格，得到 16。\n\n`DISTINCT` 可以排除重複的資料：`COUNT(DISTINCT 社團)` 得到 4，代表有 4 個不同的社團。把 COUNT 拿掉、只留 DISTINCT，就能看到是哪四個。\n\n要注意 DISTINCT 不會自動排除 NULL；想把空值藏起來，再加一行 WHERE，指定社團欄位不是 NULL（寫成 `IS NOT NULL`）。",
+      "code": "SELECT COUNT(*), COUNT(社團), COUNT(DISTINCT 社團)\nFROM students;\n\nSELECT DISTINCT 社團\nFROM students\nWHERE 社團 IS NOT NULL;"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "想知道「各班」的平均成績，要搭配哪個語法？",
+      "options": [
+        "GROUP BY 班級",
+        "LIMIT 班級",
+        "OFFSET 班級",
+        "DESC 班級"
+      ],
+      "answer": 0,
+      "explain": "GROUP BY 會先依欄位分組，再對每一組做 AVG 這類匯總。"
+    },
+    {
+      "type": "choice",
+      "q": "表格共有 18 筆資料，其中 2 筆的「社團」是空值。COUNT(社團) 會得到多少？",
+      "options": [
+        "18",
+        "20",
+        "16",
+        "2"
+      ],
+      "answer": 2,
+      "explain": "COUNT 對單一欄位計數時會忽略空值（NULL），所以是 18 − 2 = 16。COUNT(*) 才會是總行數 18。"
+    },
+    {
+      "type": "tf",
+      "q": "要依「分組後的平均分數」篩選班級，必須使用 HAVING。",
+      "answer": true,
+      "explain": "WHERE 在分組之前篩選原始資料，沒辦法使用分組後才算出來的匯總值；要篩選分組結果，就用 HAVING，而且它要寫在 GROUP BY 之後。"
+    },
+    {
+      "type": "fill",
+      "q": "補上關鍵字，替欄位取別名：",
+      "code": "SELECT AVG(成績) ___ 成績平均\nFROM students;",
+      "answers": [
+        "as"
+      ],
+      "ci": true,
+      "hints": [
+        "英文意思是「作為」",
+        "共 2 個字母"
+      ],
+      "explain": "AS 可以替欄位取別名，讓查詢結果的標題更好讀。"
+    },
+    {
+      "type": "fill",
+      "q": "補上關鍵字，計算有幾個不重複的社團：",
+      "code": "SELECT COUNT(___ 社團)\nFROM students;",
+      "answers": [
+        "distinct"
+      ],
+      "ci": true,
+      "hints": [
+        "中文意思是「不同的、不重複的」",
+        "d 開頭，共 8 個字母"
+      ],
+      "explain": "COUNT(DISTINCT 社團) 會先排除重複的值，再計算數量。"
+    }
+  ],
+  "lab": {
+    "type": "sort",
+    "task": "排成「各班平均成績，只列平均大於等於 80 的班級，由高到低排序」。",
+    "lines": [
+      "HAVING AVG(成績) >= 80",
+      "ORDER BY 成績平均 DESC;",
+      "SELECT 班級, AVG(成績) AS 成績平均",
+      "GROUP BY 班級",
+      "FROM students"
+    ],
+    "answer": [
+      "SELECT 班級, AVG(成績) AS 成績平均",
+      "FROM students",
+      "GROUP BY 班級",
+      "HAVING AVG(成績) >= 80",
+      "ORDER BY 成績平均 DESC;"
+    ],
+    "hint": "SELECT → FROM → GROUP BY → HAVING → ORDER BY；HAVING 一定要在 GROUP BY 後面。",
+    "ok": "順序正確，這段 SQL 可以執行了！"
+  }
+}

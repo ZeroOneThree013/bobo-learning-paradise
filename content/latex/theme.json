@@ -1,8 +1,24 @@
 {
-  "video": {
-    "channel": "PAPAYA 電腦教室",
-    "channelUrl": "https://www.youtube.com/@papayaclass",
-    "title": "文章寫好了卻為排版苦惱？也許你該考慮用 LaTex 完成下一個專業的報告 (使用 Overleaf 雲端編輯器)",
-    "url": "https://youtu.be/mQamBS6uTOc"
-  }
+  "id": "latex",
+  "order": 1,
+  "icon": "📄",
+  "title": "LaTeX 排版",
+  "sub": "用 Overleaf 做出專業的報告",
+  "idBase": 0,
+  "intro": "這個主題把一支 LaTeX／Overleaf 教學影片拆成小單元",
+  "channel": {
+    "name": "PAPAYA 電腦教室",
+    "url": "https://www.youtube.com/@papayaclass"
+  },
+  "videos": [
+    {
+      "title": "文章寫好了卻為排版苦惱？也許你該考慮用 LaTex 完成下一個專業的報告 (使用 Overleaf 雲端編輯器)",
+      "url": "https://youtu.be/mQamBS6uTOc"
+    }
+  ],
+  "official": {
+    "name": "Overleaf 官方文件",
+    "url": "https://www.overleaf.com/learn"
+  },
+  "labNote": "這裡是簡化模擬，真正的編譯結果請到 Overleaf 確認。"
 }

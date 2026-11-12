@@ -75,7 +75,7 @@ function applyRemote(remote) {
 
 /* ---- 匯出 ---- */
 function reportRows() {
-  return UN.map(u => { const x = U(u.id); return { title: u.n + '. ' + u.title, learn: x.learn ? 1 : 0, quiz: x.quizDone ? 1 : 0, lab: x.lab ? 1 : 0, stars: ustars(u), max: umax(u), badge: x.badged ? 1 : 0 }; });
+  return UN.map(u => { const x = U(u.id); return { title: (THEMES.length > 1 ? themeOf(u).title + '・' : '') + u.n + '. ' + u.title, learn: x.learn ? 1 : 0, quiz: x.quizDone ? 1 : 0, lab: x.lab ? 1 : 0, stars: ustars(u), max: umax(u), badge: x.badged ? 1 : 0 }; });
 }
 function download(name, text, type) {
   const a = document.createElement('a'), url = URL.createObjectURL(new Blob([text], { type }));

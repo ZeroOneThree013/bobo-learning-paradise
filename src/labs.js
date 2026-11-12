@@ -12,7 +12,7 @@ Labs.sort = (root, u, api) => {
       '<div class="row" style="margin-top:10px"><button class="btn" type="button" id="chk">檢查順序</button></div><div id="msg" style="margin-top:10px">' + (msg || '') + '</div></div>';
     $$('.blk button', root).forEach(b => b.onclick = () => { const i = +b.dataset.i, j = i + +b.dataset.m;[arr[i], arr[j]] = [arr[j], arr[i]]; draw(); });
     $('#chk', root).onclick = () => {
-      if (arr.join('\n') === right.join('\n')) { draw('<div class="okbox">✔ 順序正確，可以編譯了！</div>'); api.done(); }
+      if (arr.join('\n') === right.join('\n')) { draw('<div class="okbox">✔ ' + esc(u.lab.ok || '順序正確，可以編譯了！') + '</div>'); api.done(); }
       else {
         const pos = {}; right.forEach((l, i) => pos[l] = i);
         let m = '再想想：';

@@ -1,0 +1,116 @@
+{
+  "id": "u103",
+  "n": 3,
+  "icon": "🧮",
+  "title": "多條件篩選",
+  "sub": "比較運算、AND、BETWEEN、OR 與括號、IN",
+  "official": [
+    {
+      "label": "SQLite：BETWEEN 與 IN",
+      "url": "https://www.sqlite.org/lang_expr.html"
+    }
+  ],
+  "cards": [
+    {
+      "t": "數字比較與 AND",
+      "body": "WHERE 不只能比對文字，也能判斷數字大小。例如列出成績在 80 分以上的同學：`成績 >= 80`。\n\n想查一個分數區間，例如 80 到 90 分，就用 `AND`（且）把兩個條件串起來，兩個都成立的資料才會回傳。",
+      "code": "SELECT 姓名, 成績\nFROM students\nWHERE 成績 >= 80\n  AND 成績 < 90;"
+    },
+    {
+      "t": "官方補充：BETWEEN 兩端都包含",
+      "body": "影片用 `BETWEEN` 把「成績大於等於 80 且小於 90」寫得更精簡。不過依 SQLite 官方文件，`x BETWEEN y AND z` 等同於 `x >= y AND x <= z`，也就是**兩端都包含**。\n\n所以 `BETWEEN 80 AND 90` 會包含剛好 90 分的人，和「小於 90」並不相同。影片裡兩種寫法的結果一樣，是因為那份資料沒有剛好 90 分的人。",
+      "code": "SELECT 姓名, 成績\nFROM students\nWHERE 成績 BETWEEN 80 AND 90;",
+      "url": "https://www.sqlite.org/lang_expr.html",
+      "label": "官方：BETWEEN 的定義",
+      "sup": true
+    },
+    {
+      "t": "OR 與括號：先算誰很重要",
+      "body": "想同時看「1 年 1 班」和「1 年 2 班」，可以用 `OR`（或）。但如果直接把 OR 接在 AND 後面，結果會怪怪的：1 年 2 班不論成績好壞都被列出來。\n\n原因是 SQL 裡 `AND` 的優先層級比 `OR` 高，會先處理 AND，再處理 OR。要改變順序，就用圓括號把想先處理的部分包起來。",
+      "code": "SELECT 姓名, 班級, 成績\nFROM students\nWHERE (班級 = '1年1班' OR 班級 = '1年2班')\n  AND 成績 BETWEEN 80 AND 90;"
+    },
+    {
+      "t": "IN：多個 OR 的簡寫",
+      "body": "多個 OR 條件可以用 `IN` 簡化：把可接受的值放在括號裡，用逗號隔開。查詢會更容易閱讀和管理。",
+      "code": "SELECT 姓名, 班級, 成績\nFROM students\nWHERE 班級 IN ('1年1班', '1年2班')\n  AND 成績 BETWEEN 80 AND 90;"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "WHERE 裡同時有 AND 和 OR，而且沒有括號時，SQL 會怎麼處理？",
+      "options": [
+        "由左到右依序處理",
+        "由右到左依序處理",
+        "先處理 AND，再處理 OR",
+        "不能同時使用"
+      ],
+      "answer": 2,
+      "explain": "AND 的優先層級比 OR 高，所以會先處理 AND。想改變順序，要用圓括號。"
+    },
+    {
+      "type": "choice",
+      "q": "「成績 BETWEEN 80 AND 90」會包含哪些成績？",
+      "options": [
+        "81 到 89 分",
+        "81 到 90 分",
+        "80 到 89 分",
+        "80 到 90 分"
+      ],
+      "answer": 3,
+      "explain": "BETWEEN 的兩端都包含，等同於 成績 >= 80 AND 成績 <= 90，所以 80 分和 90 分都算。"
+    },
+    {
+      "type": "tf",
+      "q": "「班級 IN ('1年1班', '1年2班')」的效果，等同於用 OR 連接兩個「班級 =」的條件。",
+      "answer": true,
+      "explain": "沒錯，IN 就是用來簡化多個 OR 條件的寫法。"
+    },
+    {
+      "type": "fill",
+      "q": "補上關鍵字，讓兩個條件都要成立：",
+      "code": "WHERE 成績 >= 80 ___ 成績 < 90",
+      "answers": [
+        "and"
+      ],
+      "ci": true,
+      "hints": [
+        "中文意思是「且」",
+        "a 開頭，共 3 個字母"
+      ],
+      "explain": "AND 要求前後兩個條件同時成立，資料才會被回傳。"
+    },
+    {
+      "type": "fill",
+      "q": "補上關鍵字，簡化多個 OR 條件：",
+      "code": "WHERE 班級 ___ ('1年1班', '1年2班')",
+      "answers": [
+        "in"
+      ],
+      "ci": true,
+      "hints": [
+        "中文意思是「在……之中」",
+        "共 2 個字母"
+      ],
+      "explain": "IN 會檢查欄位的值是不是括號裡的其中一個。"
+    }
+  ],
+  "lab": {
+    "type": "sort",
+    "task": "排成「1 年 1 班或 1 年 2 班中，成績在 80 到 90 分之間的姓名與成績」。班級條件寫在前面，成績條件接在後面。",
+    "lines": [
+      "AND 成績 BETWEEN 80 AND 90;",
+      "WHERE 班級 IN ('1年1班', '1年2班')",
+      "SELECT 姓名, 成績",
+      "FROM students"
+    ],
+    "answer": [
+      "SELECT 姓名, 成績",
+      "FROM students",
+      "WHERE 班級 IN ('1年1班', '1年2班')",
+      "AND 成績 BETWEEN 80 AND 90;"
+    ],
+    "hint": "SELECT → FROM → WHERE；AND 接在 WHERE 條件的後面，分號放最後。",
+    "ok": "順序正確，這段 SQL 可以執行了！"
+  }
+}

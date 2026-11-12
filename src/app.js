@@ -11,11 +11,12 @@ function U(id) { return S.u[id] || (S.u[id] = { learn: false, quizDone: false, l
 
 // 工作用的單元資料（雲端題庫成功時，會換掉對應單元的題目）
 const UN = UNITS.map(u => Object.assign({}, u, { questions: u.questions.slice() }));
-// 主題書架：之後新增主題，只要在這裡加一筆（ready:true 的要有對應的單元資料）
-const THEMES = [
-  { id: 'latex', icon: '📄', title: 'LaTeX 排版', sub: '用 Overleaf 做出專業的報告', ready: true },
-  { id: 'next1', icon: '🌱', title: '更多主題', sub: '小博正在整理下一本書', ready: false },
-];
+// THEMES（每本書的資料）由 build.py 從 content/<主題>/theme.json 產生；這裡只放「規劃中」的占位卡與輔助函式
+const COMING = { id: 'next', icon: '🌱', title: '更多主題', sub: '小博正在整理下一本書' };
+const themeById = {}; THEMES.forEach(t => { themeById[t.id] = t; });
+const themeUnits = tid => UN.filter(u => u.theme === tid);
+const themeOf = u => themeById[u.theme];
+const videoOf = u => { const t = themeOf(u); return t.videos[u.video || 0] || t.videos[0]; };
 const byId = {}; UN.forEach(u => { byId[u.id] = u; });
 let cloud = 'off'; // off | loading | ok | fail
 
@@ -105,29 +106,30 @@ function render(keepScroll) {
   if (parts[0] === 'u' && byId[parts[1]]) unitView(byId[parts[1]], parts[2] || 'learn');
   else if (parts[0] === 'badges') badgesView();
   else if (parts[0] === 'about') aboutView();
-  else if (parts[0] === 't' && parts[1] === 'latex') mapView();
+  else if (parts[0] === 't' && themeById[parts[1]]) mapView(themeById[parts[1]]);
   else themeHome();
   document.title = 'BoBo 學習樂園';
   if (!keepScroll) window.scrollTo(0, 0);
 }
 
 /* ---------- 首頁 ---------- */
-function mapView() {
-  const m = UN.reduce((s, u) => s + [U(u.id).learn, U(u.id).quizDone, U(u.id).lab].filter(Boolean).length, 0);
-  const pct = Math.round(m / (UN.length * 3) * 100);
-  const done = UN.filter(unitDone).length;
-  const next = UN.find(u => !unitDone(u)) || UN[0];
-  const stat = pct === 0 ? '還沒開始，我們從第 1 單元出發吧！' : (done === UN.length ? '全部單元完成了，你是小博的得意門生！' : '已完成 ' + done + ' 個單元，繼續加油！');
+function mapView(t) {
+  const TU = themeUnits(t.id);
+  const m = TU.reduce((s, u) => s + [U(u.id).learn, U(u.id).quizDone, U(u.id).lab].filter(Boolean).length, 0);
+  const pct = Math.round(m / (TU.length * 3) * 100);
+  const done = TU.filter(unitDone).length;
+  const next = TU.find(u => !unitDone(u)) || TU[0];
+  const stat = pct === 0 ? '還沒開始，我們從第 1 單元出發吧！' : (done === TU.length ? '全部單元完成了，你是小博的得意門生！' : '已完成 ' + done + ' 個單元，繼續加油！');
   $('#app').innerHTML =
     '<div class="crumb"><a href="#/">← 所有主題</a></div>' +
     '<section class="card hero"><img class="pic" src="' + MASCOT.happy + '" alt="小博（Bobo）揮手打招呼">' +
-    '<div><h1>📄 LaTeX 排版</h1>' +
-    '<p>這個主題把一支 LaTeX／Overleaf 教學影片拆成小單元（目前共 ' + UN.length + ' 個），每個單元都有 <strong>📖 學習</strong>、<strong>✅ 驗證</strong>、<strong>🛠 實作</strong>，並對照 Overleaf 官方文件。</p>' +
+    '<div><h1>' + t.icon + ' ' + esc(t.title) + '</h1>' +
+    '<p>' + esc(t.intro) + '（目前共 ' + TU.length + ' 個單元），每個單元都有 <strong>📖 學習</strong>、<strong>✅ 驗證</strong>、<strong>🛠 實作</strong>，並對照 ' + esc(t.official.name) + '。</p>' +
     '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="整體進度"><i style="width:' + pct + '%"></i></div>' +
     '<p class="muted" style="margin:.4em 0 .9em">整體進度 ' + pct + '%　' + stat + '</p>' +
     '<div class="row"><a class="btn" href="#/u/' + next.id + '">' + (pct === 0 ? '🚀 從第 1 單元開始' : '▶ 繼續：' + next.title) + '</a><a class="btn sec" href="#/about">關於與來源</a></div></div></section>' +
     '<h2 style="margin:22px 4px 10px">🗺️ 學習地圖</h2><div class="grid">' +
-    UN.map(u => {
+    TU.map(u => {
       const x = U(u.id);
       return '<a class="card unit" href="#/u/' + u.id + '"><span class="no" aria-hidden="true">' + u.n + '</span><span class="ic" aria-hidden="true">' + u.icon + '</span>' +
         '<h3>' + esc(u.title) + '</h3><span class="muted" style="font-size:.9rem">' + esc(u.sub) + '</span>' +
@@ -135,22 +137,23 @@ function mapView() {
         '<span class="stars">⭐ ' + ustars(u) + ' / ' + umax(u) + '</span>' +
         (unitDone(u) ? '<span class="medal" title="已獲得徽章" aria-label="已獲得徽章">' + u.icon + '</span>' : '') + '</a>';
     }).join('') + '</div>';
-  Mascot.say(pct === 0 ? '這是 LaTeX 的學習地圖，從第 1 單元開始吧！' : '歡迎回來！要不要接著學「' + next.title + '」？', 'happy');
+  Mascot.say(pct === 0 ? '這是「' + t.title + '」的學習地圖，從第 1 單元開始吧！' : '歡迎回來！要不要接著學「' + next.title + '」？', 'happy');
 }
 
 function themeHome() {
-  const tot = UN.reduce((s, u) => s + ustars(u), 0), max = UN.reduce((s, u) => s + umax(u), 0);
-  const done = UN.filter(unitDone).length;
+  const card = t => {
+    const TU = themeUnits(t.id), done = TU.filter(unitDone).length;
+    const tot = TU.reduce((s, u) => s + ustars(u), 0), max = TU.reduce((s, u) => s + umax(u), 0);
+    return '<a class="card unit" href="#/t/' + t.id + '"><span class="ic" aria-hidden="true">' + t.icon + '</span><h3>' + esc(t.title) + '</h3><span class="muted" style="font-size:.9rem">' + esc(t.sub) + '</span>' +
+      '<span class="pips"><span class="pip on">' + TU.length + ' 個單元</span><span class="pip' + (done === TU.length ? ' on' : '') + '">已完成 ' + done + '</span></span><span class="stars">⭐ ' + tot + ' / ' + max + '</span></a>';
+  };
   $('#app').innerHTML =
     '<section class="card hero"><img class="pic" src="' + MASCOT.happy + '" alt="小博（Bobo）揮手打招呼">' +
     '<div><h1>歡迎來到 BoBo 學習樂園！</h1>' +
     '<p>我是智慧之書「小博」。每個主題都是一本書，裡面分成小單元，用 <strong>📖 學習</strong>、<strong>✅ 驗證</strong>、<strong>🛠 實作</strong> 三步驟學會它。先挑一本書吧！</p></div></section>' +
     '<h2 style="margin:22px 4px 10px">📚 主題書架</h2><div class="grid">' +
-    THEMES.map(t => t.ready
-      ? '<a class="card unit" href="#/t/' + t.id + '"><span class="ic" aria-hidden="true">' + t.icon + '</span><h3>' + esc(t.title) + '</h3><span class="muted" style="font-size:.9rem">' + esc(t.sub) + '</span>' +
-        '<span class="pips"><span class="pip on">' + UN.length + ' 個單元</span><span class="pip' + (done === UN.length ? ' on' : '') + '">已完成 ' + done + '</span></span><span class="stars">⭐ ' + tot + ' / ' + max + '</span></a>'
-      : '<div class="card unit" style="opacity:.75" aria-label="規劃中的主題"><span class="ic" aria-hidden="true">' + t.icon + '</span><h3>' + esc(t.title) + '</h3><span class="muted" style="font-size:.9rem">' + esc(t.sub) + '</span><span class="pips"><span class="pip">規劃中</span></span></div>'
-    ).join('') + '</div>';
+    THEMES.map(card).join('') +
+    '<div class="card unit" style="opacity:.75" aria-label="規劃中的主題"><span class="ic" aria-hidden="true">' + COMING.icon + '</span><h3>' + esc(COMING.title) + '</h3><span class="muted" style="font-size:.9rem">' + esc(COMING.sub) + '</span><span class="pips"><span class="pip">規劃中</span></span></div></div>';
   Mascot.say('嗨！我是小博，今天想翻開哪一本書？', 'happy');
 }
 
@@ -158,19 +161,19 @@ function themeHome() {
 function unitView(u, tab) {
   if (['learn', 'quiz', 'lab'].indexOf(tab) < 0) tab = 'learn';
   const x = U(u.id), i = unitIdx(u.id);
-  const prev = UN[i - 1], next = UN[i + 1];
+  const TU = themeUnits(u.theme), ti = TU.indexOf(u), prev = TU[ti - 1], next = TU[ti + 1], th = themeOf(u), vd = videoOf(u);
   const tabs = [['learn', '📖 學習', x.learn], ['quiz', '✅ 驗證', x.quizDone], ['lab', '🛠 實作', x.lab]];
   let body = '';
   if (tab === 'learn') body = learnHTML(u);
   else if (tab === 'quiz') body = quizHTML(u);
   else body = labFrameHTML(u);
   $('#app').innerHTML =
-    '<div class="crumb"><a href="#/t/latex">← 學習地圖</a><span class="muted">單元 ' + u.n + ' / ' + UN.length + '</span><span class="sp"></span>' +
+    '<div class="crumb"><a href="#/t/' + u.theme + '">← 學習地圖</a><span class="muted">單元 ' + u.n + ' / ' + TU.length + '</span><span class="sp"></span>' +
     (prev ? '<a class="btn sec sm" href="#/u/' + prev.id + '">← 上一單元</a>' : '') + (next ? '<a class="btn sec sm" href="#/u/' + next.id + '">下一單元 →</a>' : '') + '</div>' +
     '<section class="card"><h1>' + u.icon + ' ' + u.n + '. ' + esc(u.title) + '</h1><p class="muted" style="margin-top:-.2em">' + esc(u.sub) + '</p>' +
     '<div class="tabs" role="tablist">' + tabs.map(t => '<a class="tab" role="tab" href="#/u/' + u.id + '/' + t[0] + '"' + (t[0] === tab ? ' aria-current="page"' : '') + '>' + t[1] + (t[2] ? '<span class="done">完成</span>' : '') + '</a>').join('') + '</div>' +
     '<div id="tabbody">' + body + '</div>' +
-    '<p class="muted" style="margin-top:18px;font-size:.85rem">內容整理自影片《<a href="' + VIDEO.url + '" target="_blank" rel="noopener">' + esc(VIDEO.title) + '</a>》（' + esc(VIDEO.channel) + '），並對照 Overleaf 官方文件補充。</p></section>';
+    '<p class="muted" style="margin-top:18px;font-size:.85rem">內容整理自影片《<a href="' + vd.url + '" target="_blank" rel="noopener">' + esc(vd.title) + '</a>》（' + esc(th.channel.name) + '），並對照 ' + esc(th.official.name) + '補充。</p></section>';
   if (tab === 'learn') hydrateMath();
   if (tab === 'learn') Mascot.say('有不懂的地方，點「官方怎麼說」看原文喔！', 'happy');
   if (tab === 'quiz' && Q && Q.uid === u.id && Q.i === 0 && Q.phase === 'ask') Mascot.say('準備好了嗎？慢慢想，小博在旁邊。', 'happy');
@@ -243,15 +246,15 @@ function resultHTML(u) {
   return '<div class="result"><div class="big">⭐ ' + got + ' / ' + max + '</div><p>' + (good ? '太厲害了！這個單元你掌握得很好。' : '再複習一下學習卡片，下次一定更好！') + '</p>' +
     '<div class="qdots" style="justify-content:center;margin-bottom:10px">' + qs.map((_, k) => '<span class="qd ' + (Q.res[k] === 'ok' ? 'ok' : 'no') + '"></span>').join('') + '</div>' +
     '<p class="muted">歷史最高：⭐ ' + best + ' / ' + max + '（可以重做來刷新紀錄）</p>' +
-    '<div class="row" style="justify-content:center"><button class="btn sec" type="button" data-act="qretry">🔁 再做一次</button><a class="btn" href="#/u/' + u.id + '/lab">去實作 🛠</a><a class="btn sec" href="#/t/latex">回學習地圖</a></div></div>';
+    '<div class="row" style="justify-content:center"><button class="btn sec" type="button" data-act="qretry">🔁 再做一次</button><a class="btn" href="#/u/' + u.id + '/lab">去實作 🛠</a><a class="btn sec" href="#/t/' + u.theme + '">回學習地圖</a></div></div>';
 }
 function awardQ(u, stars) {
   const id = qid(u, Q.i), x = U(u.id);
   x.q[id] = Math.max(x.q[id] || 0, stars); save();
   Q.stars = stars; Q.runStars = Q.runStars || []; Q.runStars[Q.i] = stars;
 }
-function fillOK(input, answers) {
-  const norm = s => String(s).replace(/\s+/g, '');
+function fillOK(input, answers, ci) {
+  const norm = s => { s = String(s).replace(/\s+/g, ''); return ci ? s.toLowerCase() : s; };
   const a = norm(input);
   return answers.some(ans => {
     const t = norm(ans);
@@ -272,10 +275,10 @@ function checkBadge(u) {
   const x = U(u.id);
   if (x.learn && x.quizDone && x.lab && !x.badged) {
     x.badged = true; save();
-    const all = UN.every(k => U(k.id).badged);
-    Mascot.say(all ? '你完成所有單元了！你是小博的得意門生！' : '解鎖徽章了！小博以你為榮！', 'cheer');
+    const TU = themeUnits(u.theme), all = TU.every(k => U(k.id).badged);
+    Mascot.say(all ? '你完成這本書的所有單元了！你是小博的得意門生！' : '解鎖徽章了！小博以你為榮！', 'cheer');
     showModal('<div class="badge-big" aria-hidden="true">' + (all ? '🎓' : u.icon) + '</div><h2>' + (all ? '你是「小博的得意門生」！' : '解鎖徽章：' + esc(u.title)) + '</h2><p>' +
-      (all ? UN.length + ' 個單元全部完成，太了不起了！' : '學習、驗證、實作三個區塊都完成了。') + '</p><div class="row" style="justify-content:center"><button class="btn" type="button" data-act="close">太棒了！</button></div>');
+      (all ? TU.length + ' 個單元全部完成，太了不起了！' : '學習、驗證、實作三個區塊都完成了。') + '</p><div class="row" style="justify-content:center"><button class="btn" type="button" data-act="close">太棒了！</button></div>');
   }
 }
 
@@ -284,7 +287,7 @@ function labFrameHTML(u) {
   const lab = u.lab, x = U(u.id);
   return '<div class="task' + (x.lab ? ' ok' : '') + '" id="labtask">' + (x.lab ? '✔ 任務完成！' : '🎯 任務：') + ' ' + esc(lab.task) + '</div>' +
     '<div id="labroot"></div>' +
-    '<p class="muted" style="margin-top:14px;font-size:.9rem">' + OVERLEAF_NOTE + ' ' + officialBtns(u) + '</p>';
+    '<p class="muted" style="margin-top:14px;font-size:.9rem">' + (themeOf(u).labNote || '') + ' ' + officialBtns(u) + '</p>';
 }
 function mountLab(u) {
   const root = $('#labroot'); if (!root) return;
@@ -310,12 +313,17 @@ function mountLab(u) {
 function badgesView() {
   const tot = UN.reduce((s, u) => s + ustars(u), 0), max = UN.reduce((s, u) => s + umax(u), 0);
   const all = UN.every(u => U(u.id).badged);
+  const sect = t => {
+    const TU = themeUnits(t.id), ok = TU.every(u => U(u.id).badged);
+    return '<h2 style="margin-top:20px">' + t.icon + ' ' + esc(t.title) + '　<span class="muted" style="font-size:.9rem">徽章 ' + TU.filter(u => U(u.id).badged).length + ' / ' + TU.length + '</span></h2>' +
+      (ok ? '<div class="callout"><strong>🎓 稱號：小博的得意門生</strong><br>你完成了這本書的所有單元，太厲害了！</div>' : '<div class="callout">' + TU.length + ' 個單元的徽章全部解鎖，就能獲得這本書的「小博的得意門生」稱號。</div>') +
+      '<div class="scroll"><table class="prog" style="margin-top:12px"><thead><tr><th>單元</th><th>學習</th><th>驗證</th><th>實作</th><th>星星</th><th>徽章</th></tr></thead><tbody>' +
+      TU.map(u => { const x = U(u.id); const c = v => v ? '✔' : '—'; return '<tr><td><a href="#/u/' + u.id + '">' + u.icon + ' ' + u.n + '. ' + esc(u.title) + '</a></td><td>' + c(x.learn) + '</td><td>' + c(x.quizDone) + '</td><td>' + c(x.lab) + '</td><td>' + ustars(u) + '/' + umax(u) + '</td><td>' + (x.badged ? '<span aria-label="已解鎖">' + u.icon + '</span>' : '—') + '</td></tr>'; }).join('') +
+      '</tbody></table></div>';
+  };
   $('#app').innerHTML = '<section class="card"><h1>🏅 我的成就</h1>' +
     '<p>累積星星：<span class="stars">⭐ ' + tot + ' / ' + max + '</span>　已解鎖徽章：<strong>' + UN.filter(u => U(u.id).badged).length + ' / ' + UN.length + '</strong></p>' +
-    (all ? '<div class="callout"><strong>🎓 稱號：小博的得意門生</strong><br>你完成了所有單元，太厲害了！</div>' : '<div class="callout">' + UN.length + ' 個單元的徽章全部解鎖，就能獲得「小博的得意門生」稱號。</div>') +
-    '<div class="scroll"><table class="prog" style="margin-top:12px"><thead><tr><th>單元</th><th>學習</th><th>驗證</th><th>實作</th><th>星星</th><th>徽章</th></tr></thead><tbody>' +
-    UN.map(u => { const x = U(u.id); const c = v => v ? '✔' : '—'; return '<tr><td><a href="#/u/' + u.id + '">' + u.icon + ' ' + u.n + '. ' + esc(u.title) + '</a></td><td>' + c(x.learn) + '</td><td>' + c(x.quizDone) + '</td><td>' + c(x.lab) + '</td><td>' + ustars(u) + '/' + umax(u) + '</td><td>' + (x.badged ? '<span aria-label="已解鎖">' + u.icon + '</span>' : '—') + '</td></tr>'; }).join('') +
-    '</tbody></table></div>' +
+    THEMES.map(sect).join('') +
     '<h2 style="margin-top:20px">💾 備份與匯出</h2><p class="muted" style="margin-top:-.3em">進度預設存在這個瀏覽器。換裝置前可以下載備份，也可以登入 Google 帳號自動同步。</p>' +
     '<div class="row"><button class="btn sec sm" type="button" data-act="exp-json">⬇ 下載進度檔 (.json)</button><button class="btn sec sm" type="button" data-act="exp-csv">⬇ 下載成績表 (.csv)</button><button class="btn sec sm" type="button" data-act="imp">⬆ 載入進度檔</button><input id="impfile" type="file" accept=".json,application/json" hidden></div>' +
     (typeof Acct !== 'undefined' && Acct.enabled() ? '<p style="margin-top:10px">' + (Acct.s ? '已登入 <strong>' + esc(Acct.s.email) + '</strong>，進度會自動同步。<button class="btn sec sm" type="button" data-act="acct">帳號與寄信</button>' : '<button class="btn sm" type="button" data-act="acct">👤 登入並同步進度</button>') + '</p>' : '') +
@@ -324,13 +332,15 @@ function badgesView() {
 }
 function aboutView() {
   const st = { off: '目前使用內建題庫（尚未設定雲端題庫）', loading: '正在連線雲端題庫…', ok: '已載入雲端題庫（Google Sheet）', fail: '雲端題庫連線失敗，已自動改用內建題庫' }[cloud];
+  const lnk = (u, t) => '<a href="' + u + '" target="_blank" rel="noopener">' + esc(t) + '</a>';
+  const srcHTML = t => '<div class="tl"><p><strong>' + t.icon + ' ' + esc(t.title) + '</strong></p><p><strong>影片：</strong>' + t.videos.map(v => lnk(v.url, v.title)).join('<br>') +
+    '<br>頻道：' + lnk(t.channel.url, t.channel.name) + '</p><p><strong>官方資料：</strong>' + lnk(t.official.url, t.official.name) + '（各單元附對應頁面）</p></div>';
   $('#app').innerHTML = '<section class="card"><h1>ℹ️ 關於與來源</h1>' +
-    '<p>BoBo 學習樂園是一個「學習 → 驗證 → 實作」的互動學習平台，第一個主題是 LaTeX。作為作業作品，它是單一 <code>index.html</code>，用 Vibe Coding（和 AI 反覆討論與修改）完成。</p>' +
-    '<h2>內容來源</h2><div class="tl"><p><strong>影片：</strong><a href="' + VIDEO.url + '" target="_blank" rel="noopener">' + esc(VIDEO.title) + '</a><br>頻道：<a href="' + VIDEO.channelUrl + '" target="_blank" rel="noopener">' + esc(VIDEO.channel) + '</a></p>' +
-    '<p><strong>官方資料：</strong><a href="https://www.overleaf.com/learn" target="_blank" rel="noopener">Overleaf 官方文件</a>（各單元附對應頁面）</p></div>' +
-    '<p>所有學習卡片與題目，都是參考上述影片後用自己的話重新整理，並對照 Overleaf 官方文件補充（標示「官方補充」的部分）。這不是官方教材，也沒有重製影片逐字稿；完整內容請看原影片與官方文件。</p>' +
+    '<p>BoBo 學習樂園是一個「學習 → 驗證 → 實作」的互動學習平台，目前有 ' + THEMES.length + ' 本書。作為作業作品，它是單一 <code>index.html</code>，用 Vibe Coding（和 AI 反覆討論與修改）完成。</p>' +
+    '<h2>內容來源</h2>' + THEMES.map(srcHTML).join('') +
+    '<p>所有學習卡片與題目，都是參考上述影片後用自己的話重新整理，並對照各主題的官方文件補充（標示「官方補充」的部分）。這不是官方教材，也沒有重製影片逐字稿；完整內容請看原影片與官方文件。</p>' +
     '<h2>吉祥物</h2><p>智慧之書——小博（Bobo）的圖片由 AI 生成：主角由 Gemini 生成，慶祝、安慰、思考三種表情由 ChatGPT 依主角延伸。</p>' +
-    '<h2>題庫狀態</h2><p>' + st + '。雲端題庫連線失敗或逾時（約 5 秒）時，會自動使用內建的 50 題。</p>' +
+    '<h2>題庫狀態</h2><p>' + st + '。雲端題庫連線失敗或逾時（約 5 秒）時，會自動使用內建的 ' + UN.reduce((s, u) => s + u.questions.length, 0) + ' 題。</p>' +
     '<h2>📱 加到手機主畫面</h2><p>Android（Chrome）：右上角選單 ⋮ → 「安裝應用程式」或「加到主畫面」。iPhone（Safari）：下方分享按鈕 → 「加入主畫面」。之後就能像 App 一樣從主畫面開啟。</p>' +
     '<h2>隱私</h2><p>預設不需登入，學習進度只存在你瀏覽器的 <code>localStorage</code>，不蒐集姓名或學號。題目回饋只記錄單元、題號、意見內容與時間。</p>' +
     '<p>如果你選擇「用 Google 登入」，系統只會記錄你的 Google 帳號 Email、暱稱與學習進度（存在作者的 Google Sheet），用來同步進度與把成績單寄給你本人；不會取得密碼，也不會寄信給其他人。想刪除資料請聯絡作者。</p></section>';
@@ -434,7 +444,7 @@ document.addEventListener('click', e => {
     const inp = $('#fillin'); const v = inp ? inp.value : '';
     if (!v.trim()) { toast('先填入答案再檢查喔'); if (inp) inp.focus(); return; }
     Q.tries++; Q.last = v;
-    if (fillOK(v, q.answers)) { awardQ(u, (Q.tries === 1 && !Q.hint) ? 2 : 1); afterAnswer(true); renderTop(); }
+    if (fillOK(v, q.answers, q.ci)) { awardQ(u, (Q.tries === 1 && !Q.hint) ? 2 : 1); afterAnswer(true); renderTop(); }
     else if (Q.tries >= 3) { awardQ(u, 0); afterAnswer(false); }
     else {
       Q.hintN = Math.min(q.hints.length, Math.max(Q.hintN, Q.tries)); Q.msg = '還不太對，再試一次！';

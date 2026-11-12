@@ -1,0 +1,113 @@
+{
+  "id": "u102",
+  "n": 2,
+  "icon": "🔍",
+  "title": "WHERE 與 ORDER BY",
+  "sub": "篩選、不等於、排序、DESC、LIKE",
+  "official": [
+    {
+      "label": "SQLite：表達式與 LIKE",
+      "url": "https://www.sqlite.org/lang_expr.html"
+    }
+  ],
+  "cards": [
+    {
+      "t": "WHERE：只看符合條件的資料",
+      "body": "`WHERE` 用來設定查詢時的「篩選」條件。例如只看「1 年 2 班」的成績：用 `=` 表示「等於」。\n\n如果把「等於」改成「不等於」（寫成 `<>`），就會回傳 1 年 2 班以外的資料，也就是 1 年 1 班和 1 年 3 班。\n\n文字條件要用單引號 ' ' 包起來。",
+      "code": "SELECT 姓名, 班級, 成績\nFROM students\nWHERE 班級 = '1年2班';"
+    },
+    {
+      "t": "ORDER BY：排序",
+      "body": "不同班級的同學如果混在一起，可以在最後加上 `ORDER BY`，依一個或多個欄位的值排序。\n\n例如先依「班級」排，同一班再依「成績」由低排到高。想改成由高排到低，就在那個欄位後面加 `DESC`（降序）。",
+      "code": "SELECT 姓名, 班級, 成績\nFROM students\nORDER BY 班級, 成績 DESC;"
+    },
+    {
+      "t": "LIKE 與萬用字元",
+      "body": "不確定同學全名時，可以用萬用字元搭配 `LIKE`（符合）：\n\n`%` 代表「零個或多個」任意字元；`_`（底線）代表「剛好一個」字元。\n\n`LIKE '張%'` 會列出所有姓張的同學；`LIKE '張_'` 只會回傳名字剛好兩個字的同學，例如「張靜」。",
+      "code": "SELECT * FROM students\nWHERE 姓名 LIKE '張%';\n\nSELECT * FROM students\nWHERE 姓名 LIKE '張_';"
+    },
+    {
+      "t": "把它們組起來",
+      "body": "篩選和排序可以一起用：先用 WHERE 挑出要的資料，再用 ORDER BY 排好順序。\n\n注意寫的順序：WHERE 要放在 ORDER BY 前面，因為要先篩選完，才有資料可以排序。",
+      "code": "SELECT 姓名, 成績\nFROM students\nWHERE 姓名 LIKE '張%'\nORDER BY 成績 DESC;"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "想排除「1 年 2 班」、只看其他班級，WHERE 的條件要怎麼寫？",
+      "options": [
+        "班級 = '1年2班'",
+        "班級 <> '1年2班'",
+        "班級 LIKE '1年2班'",
+        "ORDER BY 班級"
+      ],
+      "answer": 1,
+      "explain": "<> 表示「不等於」。= 和沒有萬用字元的 LIKE 都是找出剛好等於 1 年 2 班的資料；ORDER BY 是排序，不是篩選。"
+    },
+    {
+      "type": "choice",
+      "q": "LIKE '張_' 會找出什麼樣的資料？",
+      "options": [
+        "所有姓張的同學",
+        "名字中任何位置有「張」的同學",
+        "姓張、而且名字剛好兩個字的同學",
+        "姓張、而且名字剛好三個字的同學"
+      ],
+      "answer": 2,
+      "explain": "底線 _ 代表「剛好一個」字元，所以「張」後面只能再接一個字。要找所有姓張的同學，要用 %。"
+    },
+    {
+      "type": "tf",
+      "q": "ORDER BY 成績 DESC 的意思是：成績由低排到高。",
+      "answer": false,
+      "explain": "DESC 是降序，成績由高排到低。不加的時候預設是由低排到高。"
+    },
+    {
+      "type": "fill",
+      "q": "補上關鍵字，讓成績由高排到低：",
+      "code": "SELECT * FROM students\nORDER BY 成績 ___;",
+      "answers": [
+        "desc"
+      ],
+      "ci": true,
+      "hints": [
+        "它是 descending（降序）的縮寫",
+        "d 開頭，共 4 個字母"
+      ],
+      "explain": "DESC 讓結果由大排到小。"
+    },
+    {
+      "type": "fill",
+      "q": "補上關鍵字，用萬用字元比對文字：",
+      "code": "SELECT * FROM students\nWHERE 姓名 ___ '張%';",
+      "answers": [
+        "like"
+      ],
+      "ci": true,
+      "hints": [
+        "中文意思是「符合」",
+        "l 開頭，共 4 個字母"
+      ],
+      "explain": "要用 % 或 _ 這些萬用字元時，要搭配 LIKE，不能用 =。"
+    }
+  ],
+  "lab": {
+    "type": "sort",
+    "task": "排成「查詢 1 年 2 班的學生，成績由高到低」。",
+    "lines": [
+      "ORDER BY 成績 DESC;",
+      "SELECT *",
+      "WHERE 班級 = '1年2班'",
+      "FROM students"
+    ],
+    "answer": [
+      "SELECT *",
+      "FROM students",
+      "WHERE 班級 = '1年2班'",
+      "ORDER BY 成績 DESC;"
+    ],
+    "hint": "順序是 SELECT、FROM、WHERE、ORDER BY：排序一定在篩選之後，分號放最後。",
+    "ok": "順序正確，這段 SQL 可以執行了！"
+  }
+}

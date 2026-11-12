@@ -1,0 +1,24 @@
+{
+  "id": "web",
+  "order": 2,
+  "icon": "💻",
+  "title": "網頁 & 開發",
+  "sub": "跟著影片學架站與開發的基本功",
+  "idBase": 100,
+  "intro": "這個主題整理 PAPAYA 電腦教室「網頁 & 架站 & 開發」播放清單的影片，目前收錄 SQL 資料庫查詢",
+  "channel": {
+    "name": "PAPAYA 電腦教室",
+    "url": "https://www.youtube.com/@papayaclass"
+  },
+  "videos": [
+    {
+      "title": "SQL 基礎語法教學（使用 Sqliteviz 練習）",
+      "url": "https://youtu.be/G_zGBR0mQmE"
+    }
+  ],
+  "official": {
+    "name": "SQLite 官方文件",
+    "url": "https://www.sqlite.org/docs.html"
+  },
+  "labNote": "這裡是簡化模擬，真正的執行結果請到 Sqliteviz 確認。"
+}

@@ -1,0 +1,121 @@
+{
+  "id": "u105",
+  "n": 5,
+  "icon": "🛠️",
+  "title": "建立與修改資料",
+  "sub": "CREATE TABLE、INSERT、UPDATE、DELETE、DROP",
+  "official": [
+    {
+      "label": "SQLite：CREATE TABLE",
+      "url": "https://www.sqlite.org/lang_createtable.html"
+    },
+    {
+      "label": "SQLite：資料型別",
+      "url": "https://www.sqlite.org/datatype3.html"
+    }
+  ],
+  "cards": [
+    {
+      "t": "CREATE TABLE：建立表格",
+      "body": "students 表格只有社團「編號」，沒有名稱。我們來自己建一個 clubs 表格補齊。建立表格的語法是 `CREATE TABLE`，後面接表格名稱，再用一組圓括號指定欄位。\n\n每個欄位要指定資料類型：`INT` 是整數，`VARCHAR(15)` 是文字字串。還要指定一個欄位為「主鍵」（Primary Key）：它用來識別每一筆資料，所以不能重複、也不能是空值，有點像身分證字號。",
+      "code": "CREATE TABLE clubs (\n  社團編號 INT,\n  社團名稱 VARCHAR(15),\n  PRIMARY KEY (社團編號)\n);"
+    },
+    {
+      "t": "官方補充：VARCHAR(15) 在 SQLite 不限制長度",
+      "body": "影片提到 `VARCHAR(15)` 的 15 是字數上限。在其他資料庫軟體裡，這個數字通常用來限制長度；但依 SQLite 官方文件，型別名稱後面括號裡的數字會被**忽略**，SQLite 對字串長度沒有這種限制（只有一個很大的全域上限）。\n\n名稱含有 CHAR 的型別（像 VARCHAR），在 SQLite 裡會被歸為文字（TEXT）類。Sqliteviz 跑的是 SQLite，所以在這裡練習時，超過 15 個字也不會報錯。",
+      "url": "https://www.sqlite.org/datatype3.html",
+      "label": "官方：資料型別",
+      "sup": true
+    },
+    {
+      "t": "INSERT INTO：新增資料",
+      "body": "表格建好了，但裡面還沒有資料。新增資料用 `INSERT INTO`：後面接表格名稱和要填的欄位，再用 `VALUES` 一筆一筆輸入。括號裡的資料順序，要和欄位名稱一一對應。\n\n想確認有沒有成功，可以再加一行 `SELECT * FROM clubs;` 看看。",
+      "code": "INSERT INTO clubs (社團編號, 社團名稱)\nVALUES\n  (101, '籃球社'),\n  (102, '吉他社'),\n  (103, '攝影社'),\n  (104, '待確認');\n\nSELECT * FROM clubs;"
+    },
+    {
+      "t": "UPDATE、DELETE、DROP：修改與刪除",
+      "body": "收到通知，編號 104 的社團叫「舞蹈社」，就用 `UPDATE` 更新。**一定要用 WHERE 說明要改哪一筆**，沒有指定的話，全部社團的名稱都會變成舞蹈社。\n\n`DELETE` 可以刪除表格中的某筆記錄，同樣要靠 WHERE 設定條件，忘記的話，整個表格的資料都會被刪掉。\n\n如果不小心建了多餘的表格，可以用 `DROP TABLE` 把整個表格刪除。",
+      "code": "UPDATE clubs\nSET 社團名稱 = '舞蹈社'\nWHERE 社團編號 = 104;\n\nDELETE FROM clubs\nWHERE 社團編號 = 103;\n\nDROP TABLE clubs;"
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "資料庫裡的「主鍵」（Primary Key）有什麼特性？",
+      "options": [
+        "可以重複，但不能是空值",
+        "可以是空值",
+        "不能重複，也不能是空值",
+        "只能存文字"
+      ],
+      "answer": 2,
+      "explain": "主鍵用來識別每一筆資料，像身分證字號：不能重複，也不能是空值。"
+    },
+    {
+      "type": "choice",
+      "q": "執行 UPDATE 時，如果忘記寫 WHERE，會發生什麼事？",
+      "options": [
+        "只更新第一筆資料",
+        "什麼事都不會發生",
+        "出現錯誤並自動還原",
+        "表格裡每一筆資料都被更新"
+      ],
+      "answer": 3,
+      "explain": "沒有 WHERE 就沒有篩選條件，UPDATE 會套用到整個表格的每一筆資料。DELETE 也是一樣，忘了 WHERE 會刪光所有資料。"
+    },
+    {
+      "type": "tf",
+      "q": "在 SQLite 中，VARCHAR(15) 的 15 會強制限制文字最多只能有 15 個字。",
+      "answer": false,
+      "explain": "依 SQLite 官方文件，型別名稱後面括號中的數字會被忽略，SQLite 沒有這種長度限制。"
+    },
+    {
+      "type": "fill",
+      "q": "補上關鍵字，新增一筆資料：",
+      "code": "___ INTO clubs (社團編號, 社團名稱)\nVALUES (105, '桌遊社');",
+      "answers": [
+        "insert"
+      ],
+      "ci": true,
+      "hints": [
+        "中文意思是「插入」",
+        "i 開頭，共 6 個字母"
+      ],
+      "explain": "INSERT INTO 用來在表格裡新增資料，VALUES 後面的順序要和欄位對應。"
+    },
+    {
+      "type": "fill",
+      "q": "補上關鍵字，刪掉整個表格：",
+      "code": "___ TABLE clubs;",
+      "answers": [
+        "drop"
+      ],
+      "ci": true,
+      "hints": [
+        "中文意思是「丟棄」",
+        "d 開頭，共 4 個字母"
+      ],
+      "explain": "DROP TABLE 會把整個表格從資料庫刪除。刪除記錄則是用 DELETE。"
+    }
+  ],
+  "lab": {
+    "type": "sort",
+    "task": "排成「建立 clubs 表格：社團編號在前、社團名稱在後、主鍵寫在最後」。",
+    "lines": [
+      "PRIMARY KEY (社團編號)",
+      ");",
+      "社團名稱 VARCHAR(15),",
+      "CREATE TABLE clubs (",
+      "社團編號 INT,"
+    ],
+    "answer": [
+      "CREATE TABLE clubs (",
+      "社團編號 INT,",
+      "社團名稱 VARCHAR(15),",
+      "PRIMARY KEY (社團編號)",
+      ");"
+    ],
+    "hint": "CREATE TABLE 開頭，欄位依序是社團編號、社團名稱，主鍵寫在最後，最後用 ); 收尾。",
+    "ok": "順序正確，這段 SQL 可以執行了！"
+  }
+}

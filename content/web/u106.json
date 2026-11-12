@@ -1,0 +1,118 @@
+{
+  "id": "u106",
+  "n": 6,
+  "icon": "🔗",
+  "title": "跨表格查詢 JOIN",
+  "sub": "表格.欄位、LEFT JOIN、INNER JOIN、語法順序",
+  "official": [
+    {
+      "label": "SQLite：SELECT 與 JOIN",
+      "url": "https://www.sqlite.org/lang_select.html"
+    }
+  ],
+  "cards": [
+    {
+      "t": "為什麼要 JOIN？",
+      "body": "students 表格只有「社團編號」，社團的名稱放在 clubs 表格。想一次看到同學和他的社團名稱，就要把兩張表格「連起來」查，這就是 JOIN。\n\n不同表格可能有同名的欄位，所以欄位名稱前面要另外標注表格名稱，寫成「表格名稱.欄位名稱」，例如 `students.姓名`、`clubs.社團名稱`。",
+      "code": "SELECT students.姓名, clubs.社團名稱\nFROM students;"
+    },
+    {
+      "t": "LEFT JOIN：以左邊的表格為主",
+      "body": "查詢的主要資料來源是 students，再用 `LEFT JOIN` 把 clubs 加進來。結合兩個表格時，要用 `ON` 說明它們怎麼連接：這裡是 students 的「社團」連到 clubs 的「社團編號」。\n\n用 LEFT JOIN 時，系統會列出左側表格的所有記錄。所以查 1 年 1 班時，就算有同學沒報名社團，或社團編號找不到對應的名稱，他仍然會出現在結果裡，只是社團名稱是空的。",
+      "code": "SELECT students.姓名, students.班級, clubs.社團名稱\nFROM students\nLEFT JOIN clubs\n  ON students.社團 = clubs.社團編號\nWHERE students.班級 = '1年1班';"
+    },
+    {
+      "t": "INNER JOIN：只留對得上的",
+      "body": "如果想把沒有對應上的記錄藏起來，就把 JOIN 的方式改成 `INNER JOIN`（內部聯結）：只有成功對應到社團名稱的同學，才會被列出來。\n\n簡單說：LEFT JOIN 保留左邊表格的全部記錄；INNER JOIN 只保留兩邊都對得上的記錄。",
+      "code": "SELECT students.姓名, clubs.社團名稱\nFROM students\nINNER JOIN clubs\n  ON students.社團 = clubs.社團編號\nWHERE students.班級 = '1年1班';"
+    },
+    {
+      "t": "官方補充：SELECT 子句的固定順序",
+      "body": "整支影片學了很多關鍵字，它們有固定的書寫順序。依 SQLite 官方的 SELECT 語法圖：\n\n`SELECT` → `FROM`（含 JOIN）→ `WHERE` → `GROUP BY` → `HAVING` → `ORDER BY` → `LIMIT` → `OFFSET`\n\n你不一定每個都會用到，但用到的時候，順序一定要照這個排。",
+      "code": "SELECT 班級, COUNT(*) AS 人數\nFROM students\nWHERE 成績 >= 60\nGROUP BY 班級\nHAVING COUNT(*) >= 3\nORDER BY 人數 DESC\nLIMIT 2;",
+      "url": "https://www.sqlite.org/lang_select.html",
+      "label": "官方：SELECT 語法",
+      "sup": true
+    }
+  ],
+  "questions": [
+    {
+      "type": "choice",
+      "q": "使用 LEFT JOIN 時，會列出哪些記錄？",
+      "options": [
+        "只有兩張表格都對得上的記錄",
+        "左側表格的所有記錄",
+        "右側表格的所有記錄",
+        "兩張表格所有組合"
+      ],
+      "answer": 1,
+      "explain": "LEFT JOIN 以左側表格為主，會列出左側的所有記錄；對不上的部分，右側欄位會是空值。"
+    },
+    {
+      "type": "choice",
+      "q": "想只列出「成功對應到社團名稱」的同學，應該使用哪一種 JOIN？",
+      "options": [
+        "LEFT JOIN",
+        "CROSS JOIN",
+        "ORDER JOIN",
+        "INNER JOIN"
+      ],
+      "answer": 3,
+      "explain": "INNER JOIN（內部聯結）只保留兩邊都對得上的記錄。"
+    },
+    {
+      "type": "tf",
+      "q": "兩個表格有同名欄位時，要在欄位名稱前標注表格名稱，例如 students.姓名。",
+      "answer": true,
+      "explain": "沒錯。標注表格名稱，系統才知道你指的是哪張表格的欄位。"
+    },
+    {
+      "type": "fill",
+      "q": "補上關鍵字，說明兩張表格如何連接：",
+      "code": "FROM students\nLEFT JOIN clubs\n___ students.社團 = clubs.社團編號",
+      "answers": [
+        "on"
+      ],
+      "ci": true,
+      "hints": [
+        "它用來指定連接的條件",
+        "共 2 個字母"
+      ],
+      "explain": "ON 用來說明兩張表格是用哪兩個欄位對應起來的。"
+    },
+    {
+      "type": "fill",
+      "q": "補上關鍵字，只保留兩邊都對得上的記錄：",
+      "code": "FROM students\n___ JOIN clubs\nON students.社團 = clubs.社團編號",
+      "answers": [
+        "inner"
+      ],
+      "ci": true,
+      "hints": [
+        "中文意思是「內部的」",
+        "i 開頭，共 5 個字母"
+      ],
+      "explain": "INNER JOIN 只保留成功配對的記錄，沒配對上的會被藏起來。"
+    }
+  ],
+  "lab": {
+    "type": "sort",
+    "task": "排成「1 年 1 班同學的姓名與社團名稱（用 LEFT JOIN）」。",
+    "lines": [
+      "WHERE students.班級 = '1年1班';",
+      "LEFT JOIN clubs",
+      "SELECT students.姓名, clubs.社團名稱",
+      "ON students.社團 = clubs.社團編號",
+      "FROM students"
+    ],
+    "answer": [
+      "SELECT students.姓名, clubs.社團名稱",
+      "FROM students",
+      "LEFT JOIN clubs",
+      "ON students.社團 = clubs.社團編號",
+      "WHERE students.班級 = '1年1班';"
+    ],
+    "hint": "SELECT → FROM → JOIN → ON → WHERE；ON 緊接在 JOIN 後面，WHERE 在最後。",
+    "ok": "順序正確，這段 SQL 可以執行了！"
+  }
+}
