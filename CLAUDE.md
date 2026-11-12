@@ -13,11 +13,14 @@
 - **吉祥物**：「小博（Bobo）」，一本戴學士帽的智慧之書，負責鼓勵與提示。
 - **每個單元固定三段**：📖 學習（4 張卡片）→ ✅ 驗證（5 題）→ 🛠 實作（1 個互動練習）。三段都完成才算完成單元並解鎖徽章。
 - **成品形式**：打包成**單一 `index.html`**，部署在 GitHub Pages（`main` 分支、根目錄）。沒有後端也能完整使用；Google 登入與雲端題庫是選配。
+- **可安裝成手機 App（PWA）**：根目錄有 `manifest.webmanifest`、`sw.js`、`icon-192.png`、`icon-512.png`。推送新版後，已安裝的 App 會自動更新，使用者不用重裝。
 
 ## 2. 檔案結構（各放什麼）
 
 ```
 index.html          ← 打包後的成品（由 build.py 產生，絕對不要手改）
+manifest.webmanifest, sw.js, icon-192.png, icon-512.png
+                    ← PWA 檔案（讓手機能「安裝」）；sw.js 是「有網路抓最新、斷線才用快取」，不要改成先用快取
 build.py            ← 打包 + 資料格式檢查
 CLAUDE.md           ← 本文件
 NOTES.md            ← 工作日誌：做到哪、下次從哪開始
@@ -34,7 +37,7 @@ src/
   app.js            ← 狀態、路由、各頁面渲染、題庫邏輯
   account.js        ← 登入、同步、匯出（選配）
 assets/
-  icon.png, apple-touch-icon.png, manifest.json
+  icon.png, apple-touch-icon.png   ← 直接嵌入 index.html 的圖示（assets/manifest.json 已不使用，可刪）
   mascot/{happy,cheer,sad,think}.webp   ← 小博的四種表情
 backend/
   Code.gs           ← Google Apps Script（選配雲端題庫與回饋）
@@ -50,7 +53,8 @@ backend/
    - 它會先檢查所有單元的資料格式；有 `✗` 錯誤就不會產生 `index.html`，請依訊息修正。
    - `⚠` 是警告，不會中斷，但新內容不應再產生警告。
 3. 本機預覽：直接用瀏覽器開 `index.html`，或 `python3 -m http.server 8000` 後開 `http://localhost:8000`。
-4. `git add -A && git commit`，推到 `main`，GitHub Pages 約 1–2 分鐘後更新。**`index.html` 要一起 commit**（Pages 直接讀它）。
+4. 推到 `main`，GitHub Pages 約 1–2 分鐘後更新。**`index.html` 要一起 commit**（Pages 直接讀它）。
+   - 本專案的擁有者習慣用 **GitHub Desktop 自己 commit 與推送**：AI 只改檔案，**不要執行 `git commit` / `git push`**，改完附上建議的 commit 訊息即可。
 
 ## 4. 視覺與語氣規範
 
@@ -175,6 +179,7 @@ JSON 裡的反斜線要寫成 `\\`（例如 LaTeX 的 `\section` 寫成 `"\\sect
 | `layout` / `cover` / `lists` / `float` / `table` / `math` / `cite` / `pageno` | 各單元專用的互動模擬（u3–u10） | `task` |
 
 - 新增類型：在 `src/labs.js` 加 `Labs.<type> = (root, u, api) => {…}`；`root` 是要渲染的容器，`u` 是單元資料，完成時呼叫 `api.done()`，要小博說話呼叫 `api.say(文字, 表情)`。`build.py` 會檢查 `lab.type` 是否存在。
+- `sort` 支援**拖曳排序**（每行左側 ⠿ 把手，滑鼠與觸控皆可）與 ↑↓ 按鈕（給鍵盤使用）。修改時兩種操作都要保留。
 - 這些是**簡化模擬**，頁面底部的提醒文字由各書 `theme.json` 的 `labNote` 決定（例如「真正的編譯結果請到 Overleaf 確認」），不要把它寫成真的編譯器或執行環境。
 
 ## 8. 不能做的事
@@ -185,6 +190,7 @@ JSON 裡的反斜線要寫成 `\\`（例如 LaTeX 的 `\section` 寫成 `"\\sect
 - ❌ 新增色彩變數、外部套件、框架、追蹤碼。
 - ❌ 寫沒有依據的 LaTeX 說法；❌ 複製影片逐字稿或官方文件大段原文（用自己的話整理並附連結）。
 - ❌ 在一次修改裡順手重構不相關的程式；要重構先說明理由。
+- ❌ 讓 `sw.js` 改成「快取優先」（會讓使用者卡在舊版）；❌ 讓它攔截雲端帳號（Apps Script）的請求。
 - ❌ 刪檔、強制推送（`git push --force`）、改寫歷史。
 
 ## 9. 已知限制與待辦（動手前先知道）
@@ -195,6 +201,10 @@ JSON 裡的反斜線要寫成 `\\`（例如 LaTeX 的 `\section` 寫成 `"\\sect
 4. 新增單元會讓該書「全部單元徽章」的門檻提高：先前已集滿徽章的使用者，需要補完新單元才會再次拿到那本書的「得意門生」稱號。
 5. 實作元件（`Labs.*`）除 `sort` 外都是各單元專用的 LaTeX 模擬；非 LaTeX 的書請優先用 `sort`（「網頁 & 開發」全部用 `sort`），需要新互動時再新增元件。
 6. 「網頁 & 開發」目前的 `theme.json` 影片標題是描述性的暫定文字，需要換成 YouTube 上的正式標題。
+
+### 介面慣例
+- 「🏅 我的成就」每本書用 `<details class="tsect">` 呈現，**預設收合**；新增書不用改，會自動出現。
+- 書架 `.grid` 裡的卡片不要加上邊距（`.card + .card` 的間距在 `.grid` 內已被覆蓋），否則同一排高度會不一致。
 
 ## 10. 做完要
 
