@@ -476,6 +476,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
   if (e.key === 'Enter' && e.target && e.target.id === 'fillin') { e.preventDefault(); const b = $('[data-act=fillchk]'); if (b) b.click(); }
 });
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 window.addEventListener('hashchange', () => { closeModal(); render(false); });
 
 /* ---------- 啟動 ---------- */
