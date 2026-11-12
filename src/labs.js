@@ -8,9 +8,29 @@ Labs.sort = (root, u, api) => {
   const right = u.lab.answer || [String.raw`\documentclass[11pt]{article}`, String.raw`\usepackage{geometry}`, String.raw`\begin{document}`, 'Hello, LaTeX!', String.raw`\end{document}`];
   let arr = u.lab.lines.slice();
   const draw = (msg) => {
-    root.innerHTML = '<div class="panel"><h3>把程式行排成正確順序</h3>' + arr.map((l, i) => '<div class="blk"><code>' + esc(l) + '</code><button type="button" data-m="-1" data-i="' + i + '" aria-label="上移"' + (i === 0 ? ' disabled' : '') + '>↑</button><button type="button" data-m="1" data-i="' + i + '" aria-label="下移"' + (i === arr.length - 1 ? ' disabled' : '') + '>↓</button></div>').join('') +
+    root.innerHTML = '<div class="panel"><h3>把程式行排成正確順序</h3>' + arr.map((l, i) => '<div class="blk"><span class="grip" aria-hidden="true" title="拖曳排序">⠿</span><code>' + esc(l) + '</code><button type="button" data-m="-1" data-i="' + i + '" aria-label="上移"' + (i === 0 ? ' disabled' : '') + '>↑</button><button type="button" data-m="1" data-i="' + i + '" aria-label="下移"' + (i === arr.length - 1 ? ' disabled' : '') + '>↓</button></div>').join('') +
       '<div class="row" style="margin-top:10px"><button class="btn" type="button" id="chk">檢查順序</button></div><div id="msg" style="margin-top:10px">' + (msg || '') + '</div></div>';
     $$('.blk button', root).forEach(b => b.onclick = () => { const i = +b.dataset.i, j = i + +b.dataset.m;[arr[i], arr[j]] = [arr[j], arr[i]]; draw(); });
+    // 拖曳排序（滑鼠與觸控皆可；↑↓ 按鈕保留給鍵盤使用）
+    $$('.blk', root).forEach((el, i) => {
+      const grip = $('.grip', el);
+      grip.onpointerdown = e => {
+        e.preventDefault(); grip.setPointerCapture(e.pointerId);
+        const rows = $$('.blk', root), mids = rows.map(r => { const b = r.getBoundingClientRect(); return b.top + b.height / 2; });
+        const y0 = e.clientY; let to = i; el.classList.add('drag');
+        grip.onpointermove = ev => {
+          const dy = ev.clientY - y0; el.style.transform = 'translateY(' + dy + 'px)';
+          const cy = mids[i] + dy; to = 0; mids.forEach((m, k) => { if (k !== i && cy > m) to = k + (k < i ? 1 : 0); });
+          if (cy > mids[mids.length - 1]) to = mids.length - 1;
+          rows.forEach((r, k) => { if (k === i) return; let sh = 0; if (i < to && k > i && k <= to) sh = -1; if (i > to && k < i && k >= to) sh = 1; r.style.transform = sh ? 'translateY(' + sh * (rows[i].offsetHeight + 6) + 'px)' : ''; });
+        };
+        grip.onpointerup = grip.onpointercancel = () => {
+          grip.onpointermove = grip.onpointerup = grip.onpointercancel = null;
+          if (to !== i) { const [x] = arr.splice(i, 1); arr.splice(to, 0, x); }
+          draw();
+        };
+      };
+    });
     $('#chk', root).onclick = () => {
       if (arr.join('\n') === right.join('\n')) { draw('<div class="okbox">✔ ' + esc(u.lab.ok || '順序正確，可以編譯了！') + '</div>'); api.done(); }
       else {

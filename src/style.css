@@ -148,6 +148,9 @@ pre.code.fillcode{font-size:1.05rem;padding:18px 16px}
 .blk button{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:8px;width:32px;height:32px;cursor:pointer}
 .blk button:hover{background:rgba(255,255,255,.3)}
 .blk button[disabled]{opacity:.3;cursor:default}
+.blk{transition:transform .15s}
+.blk .grip{cursor:grab;touch-action:none;user-select:none;font-size:1.3rem;opacity:.6;padding:0 4px;line-height:1}
+.blk.drag{transition:none;position:relative;z-index:5;box-shadow:0 8px 20px rgba(0,0,0,.35);cursor:grabbing}
 .page{background:#fff;border:1px solid #cfd6e4;box-shadow:0 6px 16px rgba(0,0,0,.18);position:relative;overflow:hidden;margin:0 auto}
 .page.a4{width:100%;max-width:330px;aspect-ratio:210/297}
 .ln{background:#9aa6bf;border-radius:3px}
