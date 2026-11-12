@@ -37,11 +37,10 @@ src/
   app.js            ← 狀態、路由、各頁面渲染、題庫邏輯
   account.js        ← 登入、同步、匯出（選配）
 assets/
-  icon.png, apple-touch-icon.png   ← 直接嵌入 index.html 的圖示（assets/manifest.json 已不使用，可刪）
+  icon.png, apple-touch-icon.png   ← 直接嵌入 index.html 的圖示
   mascot/{happy,cheer,sad,think}.webp   ← 小博的四種表情
 backend/
-  Code.gs           ← Google Apps Script（選配雲端題庫與回饋）
-  questions.csv     ← 雲端題庫範本（選配）
+  Code.gs           ← Google Apps Script（選配：登入、進度同步、寄成績報告、收回饋）
 ```
 
 **打包規則**：`build.py` 把 `src/template.html` 內的 `{{CSS}}`、`{{CONFIG}}`、`{{DATA}}`、`{{JS}}`、`{{b64:路徑}}` 換成對應檔案內容；JS 依序是 core → labs → viz → app → account。
@@ -197,7 +196,7 @@ JSON 裡的反斜線要寫成 `\\`（例如 LaTeX 的 `\section` 寫成 `"\\sect
 
 1. 單元 id 受後端格式限制（`u` + 1–3 位數字），因此全站最多 9 本書（`idBase` 0–800）、每本最多 99 個單元。要突破需同時改 `src/account.js` 與 `backend/Code.gs`（使用者要重新部署），請先討論。
 2. 舊單元 u1、u3–u10 的單選題答案幾乎都在 A（程式沒有洗牌選項）。建議之後補上「載入時隨機排列選項並重新對應 answer」，或手動分散。`build.py` 會對這些單元顯示 ⚠。
-3. `backend/questions.csv` 是雲端題庫範本，目前只含 LaTeX 的 u1–u10，**不會**自動同步 `content/`。雲端題庫有某單元的資料時才會覆蓋內建題目，所以不同步也不會壞；若要啟用新單元的雲端題庫，需手動補列。
+3. 題目一律內建在 `content/`。`Code.gs` 仍保留讀取試算表 `questions` 分頁的選配功能（沒有這個分頁就自動用內建題目），但專案已不附範本檔，也不要為新單元去維護雲端題庫。
 4. 新增單元會讓該書「全部單元徽章」的門檻提高：先前已集滿徽章的使用者，需要補完新單元才會再次拿到那本書的「得意門生」稱號。
 5. 實作元件（`Labs.*`）除 `sort` 外都是各單元專用的 LaTeX 模擬；非 LaTeX 的書請優先用 `sort`（「網頁 & 開發」全部用 `sort`），需要新互動時再新增元件。
 6. 「網頁 & 開發」目前的 `theme.json` 影片標題是描述性的暫定文字，需要換成 YouTube 上的正式標題。
