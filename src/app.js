@@ -315,11 +315,12 @@ function badgesView() {
   const all = UN.every(u => U(u.id).badged);
   const sect = t => {
     const TU = themeUnits(t.id), ok = TU.every(u => U(u.id).badged);
-    return '<h2 style="margin-top:20px">' + t.icon + ' ' + esc(t.title) + '　<span class="muted" style="font-size:.9rem">徽章 ' + TU.filter(u => U(u.id).badged).length + ' / ' + TU.length + '</span></h2>' +
+    const st = TU.reduce((n, u) => n + ustars(u), 0), sm = TU.reduce((n, u) => n + umax(u), 0);
+    return '<details class="tsect"><summary><span class="ttl">' + t.icon + ' ' + esc(t.title) + '</span><span class="muted">徽章 ' + TU.filter(u => U(u.id).badged).length + ' / ' + TU.length + '　⭐ ' + st + ' / ' + sm + (ok ? '　🎓' : '') + '</span></summary>' +
       (ok ? '<div class="callout"><strong>🎓 稱號：小博的得意門生</strong><br>你完成了這本書的所有單元，太厲害了！</div>' : '<div class="callout">' + TU.length + ' 個單元的徽章全部解鎖，就能獲得這本書的「小博的得意門生」稱號。</div>') +
       '<div class="scroll"><table class="prog" style="margin-top:12px"><thead><tr><th>單元</th><th>學習</th><th>驗證</th><th>實作</th><th>星星</th><th>徽章</th></tr></thead><tbody>' +
       TU.map(u => { const x = U(u.id); const c = v => v ? '✔' : '—'; return '<tr><td><a href="#/u/' + u.id + '">' + u.icon + ' ' + u.n + '. ' + esc(u.title) + '</a></td><td>' + c(x.learn) + '</td><td>' + c(x.quizDone) + '</td><td>' + c(x.lab) + '</td><td>' + ustars(u) + '/' + umax(u) + '</td><td>' + (x.badged ? '<span aria-label="已解鎖">' + u.icon + '</span>' : '—') + '</td></tr>'; }).join('') +
-      '</tbody></table></div>';
+      '</tbody></table></div></details>';
   };
   $('#app').innerHTML = '<section class="card"><h1>🏅 我的成就</h1>' +
     '<p>累積星星：<span class="stars">⭐ ' + tot + ' / ' + max + '</span>　已解鎖徽章：<strong>' + UN.filter(u => U(u.id).badged).length + ' / ' + UN.length + '</strong></p>' +

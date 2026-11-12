@@ -255,3 +255,13 @@ table.prog td,table.prog th{padding:8px 6px;border-bottom:2px dashed var(--line)
 @media (max-width:760px){.vp{width:128px;font-size:8.5px}.vp.wide{width:150px}}
 button.pill.acct{cursor:pointer;border:2px solid var(--gold);font-weight:800;color:var(--navy);background:#fff}
 button.pill.acct:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+.tsect{margin-top:14px;border:2px solid #efe6c8;border-radius:14px;background:#fffdf5}
+.tsect>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:12px 16px;font-weight:800}
+.tsect>summary::-webkit-details-marker{display:none}
+.tsect>summary::before{content:'▶';font-size:.8rem;color:var(--navy);transition:transform .15s}
+.tsect[open]>summary::before{transform:rotate(90deg)}
+.tsect .ttl{font-size:1.15rem;color:var(--navy)}
+.tsect>summary .muted{font-weight:600;font-size:.9rem}
+.tsect>:not(summary){margin-left:16px;margin-right:16px}
+.tsect[open]{padding-bottom:12px}
