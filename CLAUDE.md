@@ -24,7 +24,7 @@ manifest.webmanifest, sw.js, icon-192.png, icon-512.png
 build.py            ← 打包 + 資料格式檢查
 CLAUDE.md           ← 本文件
 NOTES.md            ← 工作日誌：做到哪、下次從哪開始
-content/<主題>/      ← 每本書一個資料夾（目前有 latex）
+content/<主題>/      ← 每本書一個資料夾（目前有 latex、web）
   theme.json        ← 這本書的設定：書名、圖示、影片來源、官方文件、id 起始值（見第 5 節）
   u1.json … uN.json ← 每個單元一個檔案，檔名 = 單元 id（新增單元只需要新增這種檔案）
 src/
